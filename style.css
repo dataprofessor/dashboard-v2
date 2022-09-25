@@ -49,4 +49,6 @@ div.vg-tooltip-element {
   display: none;
 }
 
-
+div.expand-trigger {
+  height: 680;
+}
