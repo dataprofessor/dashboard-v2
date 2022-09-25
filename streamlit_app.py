@@ -42,5 +42,6 @@ with c2:
         data=stocks,
         theta='q2',
         color='company',
-        legend='bottom')
+        legend='bottom', 
+        use_container_width=True)
 
