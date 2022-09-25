@@ -1,11 +1,11 @@
 /* Logo */
-[data-testid="stSidebarNav"] {
+[data-testid="stSidebar"] {
                 background-image: url(https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png);
                 background-repeat: no-repeat;
                 padding-top: 120px;
                 background-position: 20px 20px;
             }
-[data-testid="stSidebarNav"]::before {
+[data-testid="stSidebar"]::before {
                 content: "My Company Name";
                 margin-left: 20px;
                 margin-top: 20px;
