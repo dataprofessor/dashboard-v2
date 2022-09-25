@@ -1,3 +1,21 @@
+/* Logo */
+[data-testid="stSidebarNav"] {
+                background-image: url(http://placekitten.com/200/200);
+                background-repeat: no-repeat;
+                padding-top: 120px;
+                background-position: 20px 20px;
+            }
+[data-testid="stSidebarNav"]::before {
+                content: "My Company Name";
+                margin-left: 20px;
+                margin-top: 20px;
+                font-size: 30px;
+                position: relative;
+                top: 100px;
+            }
+
+
+
 div.css-1r6slb0.e1tzin5v2 {
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
