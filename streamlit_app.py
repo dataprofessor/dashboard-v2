@@ -36,7 +36,7 @@ with c1:
     color='temp_max',
     aggregate='median',
     legend=None,
-    height=100%,
+    height=300,
     use_container_width=True)
 with c2:
     st.markdown('### Bar chart')
