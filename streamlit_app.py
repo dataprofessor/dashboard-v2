@@ -11,7 +11,7 @@ st.title('Dashboard')
 
 st.sidebar.header('About')
 st.sidebar.markdown('''
-This is Dashboard `version 2` created by Data Professor YouTube channel.
+This is Dashboard `version 2` created by [Data Professor](https://youtube.com/dataprofessor/) YouTube channel.
 ''')
 
 # Row A
