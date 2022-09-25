@@ -9,6 +9,11 @@ with open('style.css') as f:
     
 st.title('Dashboard')
 
+st.sidebar.header('About')
+st.sidebar.markdown('''
+This is Dashboard version 2 created by Data Professor YouTube channel.
+''')
+
 # Row A
 st.markdown('### Metrics')
 col1, col2, col3 = st.columns(3)
