@@ -41,5 +41,6 @@ with c2:
     plost.donut_chart(
         data=stocks,
         theta='q2',
-        color='company')
+        color='company',
+        legend='bottom')
 
