@@ -1,9 +1,8 @@
 /* Logo */
 [data-testid="stSidebar"] {
                 background-image: url(https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png);
-                background-size: 100px;
+                background-size: 200px;
                 background-repeat: no-repeat;
-                padding-top: 120px;
                 background-position: 20px 20px;
             }
 
