@@ -14,3 +14,27 @@ label.css-mkogse.e16fv1kl2 {
     font-weight: 700 !important;
     text-transform: uppercase !important;
 }
+
+
+/* Move block container higher */
+div.block-container.css-18e3th9.egzxvld2 {
+  margin-top: -5em;
+}
+
+
+/* Hide hamburger menu and footer */
+div.css-r698ls.e8zbici2 {
+  display: none;
+}
+
+footer.css-ipbk5a.egzxvld4 {
+  display: none;
+}
+
+footer.css-12gp8ed.eknhn3m4 {
+  display: none;
+}
+
+div.vg-tooltip-element {
+  display: none;
+}
