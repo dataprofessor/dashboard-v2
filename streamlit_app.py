@@ -7,9 +7,7 @@ st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     
-st.title('Dashboard')
-
-st.sidebar.header('About')
+st.sidebar.header('Dashboard')
 st.sidebar.markdown('''
 This is Dashboard `version 2` created by [Data Professor](https://youtube.com/dataprofessor/) YouTube channel.
 ''')
