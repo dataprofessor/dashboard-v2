@@ -13,7 +13,7 @@ st.sidebar.subheader('Heat map parameter')
 time_hist_color = st.sidebar.selectbox('Color by', ('temp_min', 'temp_max')) 
 
 st.sidebar.subheader('Donut chart parameter')
-donut_theta = st.selectbox('Select Q', ('Q2', 'Q3'))
+donut_theta = st.sidebar.selectbox('Select data', ('q2', 'q3'))
 
 st.sidebar.subheader('Line chart parameters')
 plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
