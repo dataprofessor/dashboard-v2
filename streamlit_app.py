@@ -44,7 +44,7 @@ with c1:
     height=345,
     use_container_width=True)
 with c2:
-    st.markdown('### Bar chart')
+    st.markdown('### Donut chart')
     plost.donut_chart(
         data=stocks,
         theta='q2',
