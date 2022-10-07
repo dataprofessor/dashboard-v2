@@ -11,7 +11,6 @@ st.sidebar.header('Dashboard `version 2`')
 
 st.sidebar.subheader('Heat map parameter')
 time_hist_color = st.sidebar.selectbox('Color by', ('temp_min', 'temp_max')) 
-#time_hist_height = st.sidebar.slider('Specify plot height', 200, 500, 345)
 
 st.sidebar.subheader('Donut chart parameter')
 donut_theta = st.selectbox('Select Q', ('Q2', 'Q3'))
@@ -47,7 +46,7 @@ with c1:
     color=time_hist_color,
     aggregate='median',
     legend=None,
-    height=time_hist_height,
+    height=345,
     use_container_width=True)
 with c2:
     st.markdown('### Donut chart')
