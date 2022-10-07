@@ -12,6 +12,9 @@ st.sidebar.markdown('''
 Created with ❤️ by [Data Professor](https://youtube.com/dataprofessor/).
 ''')
 
+plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
+plot_height = st.sidebar.slider('Specify plot height', 50, 300, 100)
+
 # Row A
 st.markdown('### Metrics')
 col1, col2, col3 = st.columns(3)
@@ -45,3 +48,4 @@ with c2:
         legend='bottom', 
         use_container_width=True)
 
+st.line_chart(seattle_weather, x = 'date', y = plot_data, height = plot_height)
