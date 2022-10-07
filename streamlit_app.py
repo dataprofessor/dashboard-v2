@@ -9,9 +9,12 @@ with open('style.css') as f:
     
 st.sidebar.header('Dashboard `version 2`')
 
-st.sidebar.subheader('Heat map parameters')
+st.sidebar.subheader('Heat map parameter')
 time_hist_color = st.sidebar.selectbox('Color by', ('temp_min', 'temp_max')) 
-time_hist_height = st.sidebar.slider('Specify plot height', 200, 500, 345)
+#time_hist_height = st.sidebar.slider('Specify plot height', 200, 500, 345)
+
+st.sidebar.subheader('Donut chart parameter')
+donut_theta = st.selectbox('Select Q', ('Q2', 'Q3'))
 
 st.sidebar.subheader('Line chart parameters')
 plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
@@ -50,7 +53,7 @@ with c2:
     st.markdown('### Donut chart')
     plost.donut_chart(
         data=stocks,
-        theta='q2',
+        theta=donut_theta
         color='company',
         legend='bottom', 
         use_container_width=True)
