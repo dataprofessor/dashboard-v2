@@ -9,6 +9,8 @@ with open('style.css') as f:
     
 st.sidebar.header('Dashboard `version 2`')
 
+st.subheader('Input parameters')
+
 plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
 plot_height = st.sidebar.slider('Specify plot height', 50, 300, 100)
 
