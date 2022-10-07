@@ -8,9 +8,6 @@ with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     
 st.sidebar.header('Dashboard `version 2`')
-st.sidebar.markdown('''
-Created with ❤️ by [Data Professor](https://youtube.com/dataprofessor/).
-''')
 
 plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
 plot_height = st.sidebar.slider('Specify plot height', 50, 300, 100)
@@ -25,6 +22,11 @@ col3.metric("Humidity", "86%", "4%")
 # Row B
 seattle_weather = pd.read_csv('https://raw.githubusercontent.com/tvst/plost/master/data/seattle-weather.csv', parse_dates=['date'])
 stocks = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/stocks_toy.csv')
+
+st.sidebar.markdown('''
+Created with ❤️ by [Data Professor](https://youtube.com/dataprofessor/).
+''')
+
 
 c1, c2 = st.columns((7,3))
 with c1:
