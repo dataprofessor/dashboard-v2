@@ -10,6 +10,9 @@ with open('style.css') as f:
 st.sidebar.header('Dashboard `version 2`')
 
 st.sidebar.subheader('Line chart parameters')
+time_hist_color = st.sidebar.selectbox('Color by', ['temp_min', 'temp_max'], ['temp_min', 'temp_max']) 
+time_hist_height = st.sidebar.slider('Specify plot height', 200, 500, 345)
+st.sidebar.subheader('Line chart parameters')
 plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
 plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
 
@@ -37,10 +40,10 @@ with c1:
     date='date',
     x_unit='week',
     y_unit='day',
-    color='temp_max',
+    color=time_hist_color,
     aggregate='median',
     legend=None,
-    height=345,
+    height=time_hist_height,
     use_container_width=True)
 with c2:
     st.markdown('### Donut chart')
