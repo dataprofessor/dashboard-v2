@@ -1,63 +1,162 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import plost
+from request import areon_query
+from slider import create_slider
+import altair as alt
 
-st.set_page_config(layout='wide', initial_sidebar_state='expanded')
-
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    
-st.sidebar.header('Dashboard `version 2`')
-
-st.sidebar.subheader('Heat map parameter')
-time_hist_color = st.sidebar.selectbox('Color by', ('temp_min', 'temp_max')) 
-
-st.sidebar.subheader('Donut chart parameter')
-donut_theta = st.sidebar.selectbox('Select data', ('q2', 'q3'))
-
-st.sidebar.subheader('Line chart parameters')
-plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
-plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
-
-st.sidebar.markdown('''
----
-Created with ❤️ by [Data Professor](https://youtube.com/dataprofessor/).
-''')
+st.set_page_config(layout='wide',
+                   page_title="وسهم",
+                    # page_icon="./assets/favicon.ico",
+                    initial_sidebar_state='expanded')
 
 
-# Row A
-st.markdown('### Metrics')
-col1, col2, col3 = st.columns(3)
-col1.metric("Temperature", "70 °F", "1.2 °F")
-col2.metric("Wind", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
 
-# Row B
-seattle_weather = pd.read_csv('https://raw.githubusercontent.com/tvst/plost/master/data/seattle-weather.csv', parse_dates=['date'])
-stocks = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/stocks_toy.csv')
+# with open('style.css') as f:
+#     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# st.sidebar.image(image="./assets/logo.png")
+st.sidebar.header('vasahm DashBoard `version 1`')
 
-c1, c2 = st.columns((7,3))
-with c1:
-    st.markdown('### Heatmap')
-    plost.time_hist(
-    data=seattle_weather,
-    date='date',
-    x_unit='week',
-    y_unit='day',
-    color=time_hist_color,
-    aggregate='median',
-    legend=None,
-    height=345,
-    use_container_width=True)
-with c2:
-    st.markdown('### Donut chart')
-    plost.donut_chart(
-        data=stocks,
-        theta=donut_theta,
-        color='company',
-        legend='bottom', 
-        use_container_width=True)
+df = pd.read_csv("data.csv").dropna()
+rslt_df = df[df['type'] == "contract"] 
+list_of_name = df['name'].to_list()
 
-# Row C
-st.markdown('### Line chart')
-st.line_chart(seattle_weather, x = 'date', y = plot_data, height = plot_height)
+name = st.sidebar.selectbox("google", options = list_of_name)
+
+st.header('گزارش ماهانه فروش', divider='rainbow')
+
+queryString = queryString = """select
+  rowTitle,
+  sum(value) as value,
+  endToPeriod
+from
+  MonthlyData
+  INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+where
+  (
+    MonthlyData.columnTitle = 'مبلغ فروش (میلیون ریال)'
+    or MonthlyData.columnTitle = 'درآمد شناسایی شده'
+    or MonthlyData.columnTitle = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
+  )
+  and stocks.name = '{}'
+group by
+  MonthlyData.rowTitle,
+  MonthlyData.endToPeriod
+""".format(name)
+
+stock_data = areon_query(queryString)
+stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+  "value",
+  "endToPeriod"])
+stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+# specify the type of selection, here single selection is used 
+selector = alt.selection_single(encodings=['x', 'color']) 
+
+chart = alt.Chart(stock_data_history).mark_bar().encode(
+    color='rowTitle:N',
+    y='sum(value):Q',
+    x='endToPeriod:N'
+)
+st.altair_chart(chart, use_container_width=True)
+
+
+st.header('گزارش تعداد تولید', divider='rainbow')
+queryString = queryString = """select
+  rowTitle,
+  sum(value) as value,
+  endToPeriod
+from
+  MonthlyData
+  INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+where
+  (
+    MonthlyData.columnTitle = 'تعداد تولید'
+  )
+  and stocks.name = '{}'
+group by
+  MonthlyData.rowTitle,
+  MonthlyData.endToPeriod
+""".format(name)
+
+stock_data = areon_query(queryString)
+stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+  "value",
+  "endToPeriod"])
+stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+# specify the type of selection, here single selection is used 
+selector = alt.selection_single(encodings=['x', 'color']) 
+
+chart_product = alt.Chart(stock_data_history).mark_bar().encode(
+    color='rowTitle:N',
+    y='sum(value):Q',
+    x='endToPeriod:N'
+)
+st.altair_chart(chart_product, use_container_width=True)
+
+st.header('گزارش تعداد فروش', divider='rainbow')
+queryString = queryString = """select
+  rowTitle,
+  sum(value) as value,
+  endToPeriod
+from
+  MonthlyData
+  INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+where
+  (
+    MonthlyData.columnTitle = 'تعداد فروش'
+  )
+  and stocks.name = '{}'
+group by
+  MonthlyData.rowTitle,
+  MonthlyData.endToPeriod
+""".format(name)
+
+stock_data = areon_query(queryString)
+stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+  "value",
+  "endToPeriod"])
+stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+# specify the type of selection, here single selection is used 
+selector = alt.selection_single(encodings=['x', 'color']) 
+
+chart_product = alt.Chart(stock_data_history).mark_bar().encode(
+    color='rowTitle:N',
+    y='sum(value):Q',
+    x='endToPeriod:N'
+)
+st.altair_chart(chart_product, use_container_width=True)
+
+
+
+
+st.header('درآمدهای عملیاتی و سود', divider='rainbow')
+queryString = """select
+  rowTitle,
+  value,
+  endToPeriod
+from
+  QuarterlyData
+  INNER JOIN stocks ON QuarterlyData.stock_id = stocks.id
+where
+  (
+    QuarterlyData.rowTitle = 'درآمدهای عملیاتی'
+    or QuarterlyData.rowTitle = 'سود(زیان) ناخالص'
+    or QuarterlyData.rowTitle = 'سود(زیان) خالص'
+  )
+  and stocks.name = '{}'
+""".format(name)
+
+stock_data = areon_query(queryString)
+stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+  "value",
+  "endToPeriod"])
+stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+# specify the type of selection, here single selection is used 
+chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
+    color='rowTitle:N',
+    y=alt.Y('value:Q').stack(None),
+    x='endToPeriod:N'
+)
+
+st.altair_chart(chart2, use_container_width=True)

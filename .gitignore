@@ -1,0 +1,5 @@
+__pycache__
+log/dashboard.log
+test*
+venv
+.vscode

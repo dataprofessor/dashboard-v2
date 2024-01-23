@@ -1,11 +1,11 @@
 /* Logo */
 /* Adapted from Zachary Blackwood */
-[data-testid="stSidebar"] {
-                background-image: url(https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png);
+/* [data-testid="stSidebar"] {
+                background-image: url(assets/logo2.png); 
                 background-size: 200px;
                 background-repeat: no-repeat;
                 background-position: 4px 20px;
-            }
+            } */
 
 
 /* Card */
