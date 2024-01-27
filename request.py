@@ -37,7 +37,6 @@ def get_nonce(email):
 def get_key(email, nonce):
     url = "https://back.vasahm.com/user/login"
     myobj = {'Email': email, "Nonce": nonce}
-
     x = requests.post(url, json = myobj).json()
     if x["hasError"]:
         x["hasError"], x["error"]["message"]

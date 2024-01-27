@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plost
-from request import areon_query
 from request import vasahm_query
 from slider import create_slider
 from request import get_nonce
@@ -10,7 +9,7 @@ from request import get_key
 import altair as alt
 
 st.set_page_config(layout='wide',
-                   page_title="Areon Dashboard",
+                   page_title="Vasahm Dashboard",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
 
@@ -32,12 +31,12 @@ st.set_page_config(layout='wide',
 #     </style>
 #     """, unsafe_allow_html=True
 # )
+with open( "style.css" ) as css:
+    st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-st.sidebar.image(image="./assets/logo.png")
-st.sidebar.header('Areon DashBoard version 1')
 
+# st.sidebar.image(image="./assets/logo.png")
+st.sidebar.header('Vasahm `version 0.1.1`')
 
 plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
 
@@ -68,8 +67,6 @@ if "token" not in st .session_state:
     # Every form must have a submit button.
     submitted = get_email.form_submit_button("Submit", on_click = get_email_callback )
 else:
-
-  st.sidebar.header('vasahm DashBoard `version 1`')
 
   df = pd.read_csv("data.csv").dropna()
   rslt_df = df[df['type'] == "contract"] 
@@ -185,8 +182,6 @@ else:
         x='endToPeriod:N'
     )
     st.altair_chart(chart_product, use_container_width=True)
-
-
 
 
   st.header('درآمدهای عملیاتی و سود', divider='rainbow')

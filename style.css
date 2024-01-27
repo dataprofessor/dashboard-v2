@@ -10,6 +10,16 @@
 
 /* Card */
 /* Adapted from https://startbootstrap.com/theme/sb-admin-2 */
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100&display=swap'); 
+
+html, body, [class*="css"] {
+    font-family: 'Vazirmatn', sans-serif; 
+    font-size: 18px;
+    font-weight: 500;
+    color: #091747;
+}
+
 div.css-1r6slb0.e1tzin5v2 {
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
