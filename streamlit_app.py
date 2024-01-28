@@ -8,6 +8,8 @@ from request import get_nonce
 from request import get_key
 import altair as alt
 
+st.session_state.ver = '0.1.2'
+
 st.set_page_config(layout='wide',
                    page_title="Vasahm Dashboard",
                     page_icon="./assets/favicon.ico",
@@ -36,7 +38,7 @@ with open( "style.css" ) as css:
 
 
 # st.sidebar.image(image="./assets/logo.png")
-st.sidebar.header('Vasahm `version 0.1.1`')
+st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
 plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
 

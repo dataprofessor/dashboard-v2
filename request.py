@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 
 
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=30600)
 def vasahm_query(queryString):
     url = 'https://back.vasahm.com/user/runQuery'
     myobj = {'queryString': queryString}

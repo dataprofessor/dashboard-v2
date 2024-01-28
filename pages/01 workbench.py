@@ -36,7 +36,7 @@ with open( "style.css" ) as css:
 
 
 # st.sidebar.image(image="./assets/logo.png")
-st.sidebar.header('Vasahm `version 0.1.1`')
+st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
 def get_email_callback():
     hasError, message = get_nonce(st.session_state.email)
