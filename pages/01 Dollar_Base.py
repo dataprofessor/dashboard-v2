@@ -76,26 +76,38 @@ else:
 
   name = st.sidebar.selectbox("google", options = list_of_name)
 
-  st.header('گزارش ماهانه فروش', divider='rainbow')
+  st.header('گزارش ماهانه فروش - دلاری', divider='rainbow')
 
-  queryString = queryString = """select
-    rowTitle,
-    sum(value) as value,
-    endToPeriod
-  from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
-  where
+  queryString = queryString = """WITH
+  ranked_dates AS (
+    select
+      rowTitle,
+      sum(value) as value,
+      endToPeriod
+    from
+      MonthlyData
+      INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    where
     (
       MonthlyData.columnTitle = 'مبلغ فروش (میلیون ریال)'
       or MonthlyData.columnTitle = 'درآمد شناسایی شده'
       or MonthlyData.columnTitle = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
     )
-    and stocks.name = '{}'
-  group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+      and stocks.name = '{}'
+    group by
+      MonthlyData.rowTitle,
+      MonthlyData.endToPeriod
+  )
+select
+  name,
+  rowTitle,
+  value / dollar.rate As dollar_value,
+  endToPeriod
+from
+  ranked_dates
+  INNER JOIN dollar ON ranked_dates.endtoPeriod = dollar.jalali
   """.format(name)
+
   error, stock_data = vasahm_query(queryString)
   if error:
     st.error(stock_data, icon="🚨")
@@ -186,21 +198,34 @@ else:
     st.altair_chart(chart_product, use_container_width=True)
 
 
-  st.header('درآمدهای عملیاتی و سود', divider='rainbow')
-  queryString = """select
-    rowTitle,
-    value,
-    endToPeriod
-  from
-    QuarterlyData
-    INNER JOIN stocks ON QuarterlyData.stock_id = stocks.id
-  where
-    (
-      QuarterlyData.rowTitle = 'درآمدهای عملیاتی'
-      or QuarterlyData.rowTitle = 'سود(زیان) ناخالص'
-      or QuarterlyData.rowTitle = 'سود(زیان) خالص'
-    )
-    and stocks.name = '{}'
+  st.header('درآمدهای عملیاتی و سود - دلاری', divider='rainbow')
+  queryString = """WITH
+  ranked_dates AS (
+    select
+      rowTitle,
+      value,
+      endToPeriod
+    from
+      QuarterlyData
+      INNER JOIN stocks ON QuarterlyData.stock_id = stocks.id
+    where
+      (
+        QuarterlyData.rowTitle = 'درآمدهای عملیاتی'
+        or QuarterlyData.rowTitle = 'سود(زیان) ناخالص'
+        or QuarterlyData.rowTitle = 'سود(زیان) خالص'
+      )
+      and stocks.name = '{}'
+  )
+select
+  name,
+  rowTitle,
+  value/dollar.rate As dollar_value,
+  endToPeriod
+from
+  ranked_dates
+  INNER JOIN dollar ON ranked_dates.endtoPeriod = dollar.jalali
+group by
+  name
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
