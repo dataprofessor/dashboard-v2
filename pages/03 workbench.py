@@ -72,7 +72,7 @@ else:
         key = "query_text",
         height=400,
     )
-
+    print(txt)
     if st.button("Query", type="primary", disabled=False, use_container_width=True):
         hasError, data = vasahm_query(txt)
         if hasError:

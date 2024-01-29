@@ -70,30 +70,30 @@ else:
   ranked_dates AS (
     SELECT
       stocks.name,
-      endToPeriod,
+      \"endToPeriod\",
       SUM(value) as sum_value,
       ROW_NUMBER() OVER (
         PARTITION BY
           stocks.name
         ORDER BY
-          endToPeriod DESC
+          \"endToPeriod\" DESC
       ) AS rnk
     FROM
-      MonthlyData
-      join stocks on MonthlyData.stock_id = stocks.id
+      \"MonthlyData\"
+      join stocks on \"MonthlyData\".stock_id = stocks.id
     where
       (
-        stocks.stockType = '300'
-        OR stocks.stockType = '303'
-        OR stocks.stockType = '309'
+        stocks.\"stockType\" = '300'
+        OR stocks.\"stockType\" = '303'
+        OR stocks.\"stockType\" = '309'
       )
       AND (
-        MonthlyData.columnTitle = 'مبلغ فروش (میلیون ریال)'
-        OR MonthlyData.columnTitle = 'درآمد شناسایی شده'
+        \"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
+        OR \"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
       )
     group by
       stocks.name,
-      MonthlyData.endToPeriod
+      \"MonthlyData\".\"endToPeriod\"
   )
 select
   name,
@@ -103,11 +103,11 @@ select
         WHEN rnk = 1 THEN sum_value
         ELSE 0
       END
-    ) / MAX(
+    ) / NULLIF(MAX(
       CASE
         WHEN rnk = 2 THEN sum_value
       END
-    )
+    ),0)
   ) AS result,
   (
     SUM(
@@ -115,11 +115,11 @@ select
         WHEN rnk IN (1, 2) THEN sum_value
         ELSE 0
       END
-    ) / SUM(
+    ) / NULLIF(SUM(
       CASE
         WHEN rnk in (3, 4) THEN sum_value
       END
-    )
+    ),0)
   ) AS result2,
   (
     SUM(
@@ -127,18 +127,19 @@ select
         WHEN rnk IN (1, 2, 3) THEN sum_value
         ELSE 0
       END
-    ) / SUM(
+    ) / NULLIF(SUM(
       CASE
         WHEN rnk in (4, 5, 6) THEN sum_value
       END
-    )
+    ),0)
   ) AS result3
 from
   ranked_dates
 group by
   name"""
-
+    print("get table")
     hasError, data = vasahm_query(txt)
+    print("back table")
     if hasError:
         st.error(data, icon="🚨")
     else:

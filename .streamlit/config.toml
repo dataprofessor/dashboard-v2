@@ -7,3 +7,6 @@ textColor="#262730"
 
 [browser]
 gatherUsageStats = true
+
+[client]
+toolbarMode = "developer"
