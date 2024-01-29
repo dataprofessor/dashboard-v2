@@ -70,7 +70,6 @@ if "token" not in st .session_state:
 else:
 
   df = pd.read_csv("data.csv").dropna()
-  rslt_df = df[df['type'] == "contract"] 
   list_of_name = df['name'].to_list()
 
   name = st.sidebar.selectbox("google", options = list_of_name)
