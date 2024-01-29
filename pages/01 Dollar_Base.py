@@ -40,7 +40,6 @@ with open( "style.css" ) as css:
 # st.sidebar.image(image="./assets/logo.png")
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
-plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
 
 def get_email_callback():
     hasError, message = get_nonce(st.session_state.email)
@@ -71,7 +70,6 @@ if "token" not in st .session_state:
 else:
 
   df = pd.read_csv("data.csv").dropna()
-  rslt_df = df[df['type'] == "contract"] 
   list_of_name = df['name'].to_list()
 
   name = st.sidebar.selectbox("google", options = list_of_name)
@@ -230,7 +228,6 @@ from
     stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
       "dollar_value",
       "endToPeriod"])
-    st.dataframe(stock_data_history, use_container_width=True)
 
     stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
     # specify the type of selection, here single selection is used 

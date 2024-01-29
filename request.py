@@ -19,7 +19,6 @@ def vasahm_query(queryString):
         "sec-fetch-site": "same-site"
     }
     x = requests.post(url, json = myobj, headers=headers).json()
-    print(x)
     if x["hasError"]:
         x["hasError"], x["error"]
     else:
