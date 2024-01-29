@@ -10,3 +10,8 @@ gatherUsageStats = true
 
 [client]
 toolbarMode = "developer"
+
+[server]
+address = "localhost"
+port = 8501
+enableCORS = false
