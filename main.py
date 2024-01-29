@@ -78,22 +78,22 @@ else:
   st.header('گزارش ماهانه فروش', divider='rainbow')
 
   queryString = queryString = """select
-    rowTitle,
+    \"rowTitle\",
     sum(value) as value,
-    endToPeriod
+    \"endToPeriod\"
   from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    public.\"MonthlyData\"
+    INNER JOIN stocks ON public.\"MonthlyData\".stock_id = stocks.id
   where
     (
-      MonthlyData.columnTitle = 'مبلغ فروش (میلیون ریال)'
-      or MonthlyData.columnTitle = 'درآمد شناسایی شده'
-      or MonthlyData.columnTitle = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
+      public.\"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
+      or public.\"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
+      or public.\"MonthlyData\".\"columnTitle\" = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
     )
     and stocks.name = '{}'
   group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+    public.\"MonthlyData\".\"rowTitle\",
+    public.\"MonthlyData\".\"endToPeriod\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
@@ -116,20 +116,20 @@ else:
 
   st.header('گزارش تعداد تولید', divider='rainbow')
   queryString = queryString = """select
-    rowTitle,
+    \"rowTitle\",
     sum(value) as value,
-    endToPeriod
+    \"endToPeriod\"
   from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    \"MonthlyData\"
+    INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
   where
     (
-      MonthlyData.columnTitle = 'تعداد تولید'
+      \"MonthlyData\".\"columnTitle\" = 'تعداد تولید'
     )
     and stocks.name = '{}'
   group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+    \"MonthlyData\".\"rowTitle\",
+    \"MonthlyData\".\"endToPeriod\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
@@ -151,20 +151,20 @@ else:
 
   st.header('گزارش تعداد فروش', divider='rainbow')
   queryString = queryString = """select
-    rowTitle,
+    \"rowTitle\",
     sum(value) as value,
-    endToPeriod
+    \"endToPeriod\"
   from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    \"MonthlyData\"
+    INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
   where
     (
-      MonthlyData.columnTitle = 'تعداد فروش'
+      \"MonthlyData\".\"columnTitle\" = 'تعداد فروش'
     )
     and stocks.name = '{}'
   group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+    \"MonthlyData\".\"rowTitle\",
+    \"MonthlyData\".\"endToPeriod\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
@@ -187,17 +187,17 @@ else:
 
   st.header('درآمدهای عملیاتی و سود', divider='rainbow')
   queryString = """select
-    rowTitle,
-    value,
-    endToPeriod
+    \"rowTitle\",
+    \"value\",
+    \"endToPeriod\"
   from
-    QuarterlyData
-    INNER JOIN stocks ON QuarterlyData.stock_id = stocks.id
+    \"QuarterlyData\"
+    INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
   where
     (
-      QuarterlyData.rowTitle = 'درآمدهای عملیاتی'
-      or QuarterlyData.rowTitle = 'سود(زیان) ناخالص'
-      or QuarterlyData.rowTitle = 'سود(زیان) خالص'
+      \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
+      or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
+      or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
     )
     and stocks.name = '{}'
   """.format(name)

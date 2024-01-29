@@ -81,31 +81,30 @@ else:
   queryString = queryString = """WITH
   ranked_dates AS (
     select
-      rowTitle,
+      \"rowTitle\",
       sum(value) as value,
-      endToPeriod
+      \"endToPeriod\"
     from
-      MonthlyData
-      INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+      \"MonthlyData\"
+      INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
     where
     (
-      MonthlyData.columnTitle = 'مبلغ فروش (میلیون ریال)'
-      or MonthlyData.columnTitle = 'درآمد شناسایی شده'
-      or MonthlyData.columnTitle = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
+      \"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
+      or \"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
+      or \"MonthlyData\".\"columnTitle\" = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
     )
       and stocks.name = '{}'
     group by
-      MonthlyData.rowTitle,
-      MonthlyData.endToPeriod
+      \"MonthlyData\".\"rowTitle\",
+      \"MonthlyData\".\"endToPeriod\"
   )
 select
-  name,
-  rowTitle,
-  value / dollar.rate As dollar_value,
-  endToPeriod
+  \"rowTitle\",
+  value / dollar.rate * 1000000 As dollar_value,
+  \"endToPeriod\"
 from
   ranked_dates
-  INNER JOIN dollar ON ranked_dates.endtoPeriod = dollar.jalali
+  INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
   """.format(name)
 
   error, stock_data = vasahm_query(queryString)
@@ -113,7 +112,7 @@ from
     st.error(stock_data, icon="🚨")
   else:
     stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
-      "value",
+      "dollar_value",
       "endToPeriod"])
     stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
     # specify the type of selection, here single selection is used 
@@ -121,7 +120,7 @@ from
 
     chart = alt.Chart(stock_data_history).mark_bar().encode(
         color='rowTitle:N',
-        y='sum(value):Q',
+        y='sum(dollar_value):Q',
         x='endToPeriod:N'
     )
     st.altair_chart(chart, use_container_width=True)
@@ -129,20 +128,20 @@ from
 
   st.header('گزارش تعداد تولید', divider='rainbow')
   queryString = queryString = """select
-    rowTitle,
+    \"rowTitle\",
     sum(value) as value,
-    endToPeriod
+    \"endToPeriod\"
   from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    \"MonthlyData\"
+    INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
   where
     (
-      MonthlyData.columnTitle = 'تعداد تولید'
+      \"MonthlyData\".\"columnTitle\" = 'تعداد تولید'
     )
     and stocks.name = '{}'
   group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+    \"MonthlyData\".\"rowTitle\",
+    \"MonthlyData\".\"endToPeriod\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
@@ -164,20 +163,20 @@ from
 
   st.header('گزارش تعداد فروش', divider='rainbow')
   queryString = queryString = """select
-    rowTitle,
+    \"rowTitle\",
     sum(value) as value,
-    endToPeriod
+    \"endToPeriod\"
   from
-    MonthlyData
-    INNER JOIN stocks ON MonthlyData.stock_id = stocks.id
+    \"MonthlyData\"
+    INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
   where
     (
-      MonthlyData.columnTitle = 'تعداد فروش'
+      \"MonthlyData\".\"columnTitle\" = 'تعداد فروش'
     )
     and stocks.name = '{}'
   group by
-    MonthlyData.rowTitle,
-    MonthlyData.endToPeriod
+    \"MonthlyData\".\"rowTitle\",
+    \"MonthlyData\".\"endToPeriod\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
@@ -202,43 +201,42 @@ from
   queryString = """WITH
   ranked_dates AS (
     select
-      rowTitle,
+      \"rowTitle\",
       value,
-      endToPeriod
+      \"endToPeriod\"
     from
-      QuarterlyData
-      INNER JOIN stocks ON QuarterlyData.stock_id = stocks.id
+      \"QuarterlyData\"
+      INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
     where
       (
-        QuarterlyData.rowTitle = 'درآمدهای عملیاتی'
-        or QuarterlyData.rowTitle = 'سود(زیان) ناخالص'
-        or QuarterlyData.rowTitle = 'سود(زیان) خالص'
+        \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
+        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
+        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
       )
       and stocks.name = '{}'
   )
 select
-  name,
-  rowTitle,
-  value/dollar.rate As dollar_value,
-  endToPeriod
+  \"rowTitle\",
+  value::float / dollar.rate * 1000000 As dollar_value,
+  \"endToPeriod\"
 from
   ranked_dates
-  INNER JOIN dollar ON ranked_dates.endtoPeriod = dollar.jalali
-group by
-  name
+  INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
   """.format(name)
   error, stock_data = vasahm_query(queryString)
   if error:
     st.error(stock_data, icon="🚨")
   else:
     stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
-      "value",
+      "dollar_value",
       "endToPeriod"])
+    st.dataframe(stock_data_history, use_container_width=True)
+
     stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
     # specify the type of selection, here single selection is used 
     chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
         color='rowTitle:N',
-        y=alt.Y('value:Q').stack(None),
+        y=alt.Y('dollar_value:Q').stack(None),
         x='endToPeriod:N'
     )
 
