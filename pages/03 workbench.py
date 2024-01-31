@@ -44,10 +44,8 @@ def get_email_callback():
         st.error(message, icon="🚨")
     else:
         submit_nonce = st.form("submit_nonce")
-        submit_nonce.write("Inside the submit_nonce")
-        nonce = submit_nonce.text_input('please enter your mail', placeholder='example@mail.com', key="nonce")
-        # Every form must have a submit button.
-        submitted = submit_nonce.form_submit_button("Submit", on_click = get_nonce_callback )
+        nonce = submit_nonce.text_input('کد تایید خود را وارد کنید', placeholder='XXXX', key="nonce")
+        submitted = submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
 
 def get_nonce_callback():
     hasError, message = get_key(st.session_state.email, st.session_state.nonce)
@@ -60,10 +58,9 @@ def get_nonce_callback():
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")
-    get_email.write("Inside the get_email")
-    email = get_email.text_input('please enter your mail', placeholder='example@mail.com', key="email")
+    email = get_email.text_input('ایمیل خود را وارد کنید', placeholder='example@mail.com', key="email")
     # Every form must have a submit button.
-    submitted = get_email.form_submit_button("Submit", on_click = get_email_callback )
+    submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
 else:
 
     txt = st.text_area(

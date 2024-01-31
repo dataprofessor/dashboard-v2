@@ -47,10 +47,8 @@ def get_email_callback():
         st.error(message, icon="🚨")
     else:
         submit_nonce = st.form("submit_nonce")
-        submit_nonce.write("Inside the submit_nonce")
-        nonce = submit_nonce.text_input('please enter your mail', placeholder='example@mail.com', key="nonce")
-        # Every form must have a submit button.
-        submitted = submit_nonce.form_submit_button("Submit", on_click = get_nonce_callback )
+        nonce = submit_nonce.text_input('کد تایید خود را وارد کنید', placeholder='XXXX', key="nonce")
+        submitted = submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
 
 def get_nonce_callback():
     hasError, message = get_key(st.session_state.email, st.session_state.nonce)
@@ -63,16 +61,15 @@ def get_nonce_callback():
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")
-    get_email.write("Inside the get_email")
-    email = get_email.text_input('please enter your mail', placeholder='example@mail.com', key="email")
+    email = get_email.text_input('ایمیل خود را وارد کنید', placeholder='example@mail.com', key="email")
     # Every form must have a submit button.
-    submitted = get_email.form_submit_button("Submit", on_click = get_email_callback )
+    submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
 else:
 
   df = pd.read_csv("data.csv").dropna()
   list_of_name = df['name'].to_list()
 
-  name = st.sidebar.selectbox("google", options = list_of_name)
+  name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
 
   st.header('گزارش ماهانه فروش - دلاری', divider='rainbow')
 
@@ -238,3 +235,42 @@ from
     )
 
     st.altair_chart(chart2, use_container_width=True)
+
+    st.header('حاشیه سود خالص - دلاری', divider='rainbow')
+  queryString = """WITH
+  ranked_dates AS (
+    select
+      \"rowTitle\",
+      value,
+      \"endToPeriod\"
+    from
+      \"QuarterlyData\"
+      INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
+    where
+      (
+        \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
+        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
+        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
+      )
+      and stocks.name = '{}'
+  )
+select
+  \"rowTitle\",
+  value::float / dollar.rate * 1000000 As dollar_value,
+  \"endToPeriod\"
+from
+  ranked_dates
+  INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
+  """.format(name)
+  error, stock_data = vasahm_query(queryString)
+  if error:
+    st.error(stock_data, icon="🚨")
+  else:
+    stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+      "value",
+      "endToPeriod"])
+    stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+    pivot_df = stock_data_history.pivot_table(index='endToPeriod', columns='rowTitle', values='value', aggfunc='sum').reset_index()
+    pivot_df["profit_ratio"] = pivot_df["سود(زیان) خالص"].astype(float)/pivot_df["درآمدهای عملیاتی"].astype(float)
+    pe_df=pivot_df[["profit_ratio", "endToPeriod"]]
+    st.line_chart(data=pe_df, x="endToPeriod", y="profit_ratio", color=None, use_container_width=True)

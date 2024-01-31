@@ -1,8 +1,11 @@
 import requests
 import streamlit as st
+import configparser
 
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-@st.cache_data(ttl=30600)
+@st.cache_data(ttl=int(config["server"]["cache_time"]))
 def vasahm_query(queryString):
     url = 'https://back.vasahm.com/user/runQuery'
     myobj = {'queryString': queryString}

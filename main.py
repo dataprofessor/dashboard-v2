@@ -68,7 +68,7 @@ else:
   df = pd.read_csv("data.csv").dropna()
   list_of_name = df['name'].to_list()
 
-  name = st.sidebar.selectbox("google", options = list_of_name)
+  name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
 
   st.header('گزارش ماهانه فروش', divider='rainbow')
 
@@ -212,3 +212,33 @@ else:
     )
 
     st.altair_chart(chart2, use_container_width=True)
+
+
+  st.header('حاشیه سود خالص', divider='rainbow')
+  queryString = """select
+    \"rowTitle\",
+    \"value\",
+    \"endToPeriod\"
+  from
+    \"QuarterlyData\"
+    INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
+  where
+    (
+      \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
+      or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
+      or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
+    )
+    and stocks.name = '{}'
+  """.format(name)
+  error, stock_data = vasahm_query(queryString)
+  if error:
+    st.error(stock_data, icon="🚨")
+  else:
+    stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+      "value",
+      "endToPeriod"])
+    stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+    pivot_df = stock_data_history.pivot_table(index='endToPeriod', columns='rowTitle', values='value', aggfunc='sum').reset_index()
+    pivot_df["profit_ratio"] = pivot_df["سود(زیان) خالص"].astype(float)/pivot_df["درآمدهای عملیاتی"].astype(float)
+    pe_df=pivot_df[["profit_ratio", "endToPeriod"]]
+    st.line_chart(data=pe_df, x="endToPeriod", y="profit_ratio", color=None, use_container_width=True)
