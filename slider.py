@@ -1,5 +1,6 @@
-import streamlit as st
 import datetime
+
+import streamlit as st
 
 def create_slider(df, key, title):
     min_value  = df['date_column'].min()

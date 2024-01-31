@@ -22,11 +22,11 @@ df = pd.read_csv("data.csv").dropna()
 list_of_name = df['name'].to_list()
 # st.sidebar.image(image="./assets/logo.png")
 def del_porto_submition_variable():
-  del st.session_state.porto_submition 
+    del st.session_state.porto_submition 
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
  
 def add_submit_state():
-  st.session_state["porto_submition"] = True
+    st.session_state["porto_submition"] = True
 
 def create_form():
     if "portfolio_analyzer" in locals():
@@ -34,14 +34,18 @@ def create_form():
     portfolio_analyzer = st.form("portfolio_analyzer")
 
     cols2 = portfolio_analyzer.columns(2, gap="small")
-    cols2[0].selectbox("سال", options = ('1400','1401','1402'), key="portfolio-year")
-    cols2[1].selectbox("ماه", options = ('فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'), key="portfolio-month")
+    cols2[0].text_input('تاریخ شروع', placeholder='14010130', key=f"portfolio_month_start")
+    cols2[1].text_input('تاریخ شروع', placeholder='14010130', key=f"portfolio_month_finish")
     cols = portfolio_analyzer.columns(3, gap="small")
     for i in range(st.session_state.portfo_number):
-      cols[0].selectbox("لیست سهام", options = list_of_name, key=f"stock_name-{i}")
-      cols[1].text_input('قیمت خرید', placeholder='12345', key=f"stock-number-{i}")
-      cols[2].text_input('سهم از کل پورتفو (درصد)', placeholder='20', key=f"stock-percent-{i}")
+      cols[0].selectbox("لیست سهام", options = list_of_name, key=f"stock_name_{i}")
+      cols[1].text_input('قیمت خرید', placeholder='12345', key=f"stock_number_{i}")
+      cols[2].text_input('سهم از کل پورتفو (درصد)', placeholder='20', key=f"stock_percent_{i}")
     # Every form must have a submit button.
+    options = portfolio_analyzer.multiselect(
+    'شاخصهای مورد نظر خود برای مقایسه را انتخاب کنید',
+    ['شاخص کل', 'شاخص همزون', 'طلا', 'زعفران (نهال)'],
+    ['شاخص کل'], key="indexes")
     portfolio_analyzer.form_submit_button("بررسی عملکرد سبد", on_click=add_submit_state)
 
 def get_email_callback():
@@ -69,12 +73,23 @@ if "token" not in st .session_state:
     submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
 else:
 
-  if "porto_submition" not in st.session_state:
-    st.number_input('تعداد سهام موجود در سبد خود را وارد کنید', min_value=1, max_value=10, on_change=create_form, value=1, key="portfo_number")
-  else:
-    st.button("ثبت مجدد سبد سرمایه گذاری", key="resubmmition_portfo", help=None, on_click=del_porto_submition_variable, args=None, kwargs=None, type="secondary", disabled=False, use_container_width=True)
-    st.write("you are here")
-
-  # name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
+    if "porto_submition" not in st.session_state:
+        st.number_input('تعداد سهام موجود در سبد خود را وارد کنید',
+                        min_value=1,
+                        max_value=10,
+                        on_change=create_form,
+                        value=1,
+                        key="portfo_number")
+    else:
+        st.button("ثبت مجدد سبد سرمایه گذاری",
+                  key="resubmmition_portfo",
+                  help=None,
+                  on_click=del_porto_submition_variable,
+                  args=None,
+                  kwargs=None,
+                  type="secondary",
+                  disabled=False,
+                  use_container_width=True)
+        st.write("you are here")
 
 
