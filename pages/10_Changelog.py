@@ -1,8 +1,14 @@
+"""Page log for changes and new improvement in project."""
+
 import streamlit as st
 
-with open( "style.css" ) as css:
+with open("style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
+st.subheader('changelog: `version 0.1.5`', divider='rainbow')
+st.markdown('''
+            * اضافه شدن صفحه بررسی عملکرد پورتفو
+            * رفع باگهای کوچک''', unsafe_allow_html=False, help=None)
 st.subheader('changelog: `version 0.1.4`', divider='rainbow')
 st.markdown('''
             * اضافه کردن نمودار پی به ای

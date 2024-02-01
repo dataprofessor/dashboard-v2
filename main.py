@@ -1,14 +1,14 @@
+"""Plot Some main monthly and quarterly charts"""
+
+
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plost
-from request import vasahm_query
-from slider import create_slider
-from request import get_nonce
-from request import get_key
 import altair as alt
 
-st.session_state.ver = '0.1.3'
+from request import vasahm_query, get_nonce, get_key
+
+
+st.session_state.ver = '0.1.5'
 
 st.set_page_config(layout='wide',
                     page_title="Vasahm Dashboard",
@@ -42,6 +42,7 @@ st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
 
 def get_email_callback():
+    """Send nonce to entered email."""
     has_error, message = get_nonce(st.session_state.email)
     if has_error:
         st.error(message, icon="🚨")
@@ -53,6 +54,7 @@ def get_email_callback():
         submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
 
 def get_nonce_callback():
+    """Confirm nonce for login."""
     has_error, message = get_key(st.session_state.email, st.session_state.nonce)
     if has_error:
         st.error(message, icon="🚨")
@@ -63,7 +65,7 @@ def get_nonce_callback():
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")
-    email = get_email.text_input('ایمیل خود را وارد کنید', 
+    email = get_email.text_input('ایمیل خود را وارد کنید',
                                  placeholder='example@mail.com',
                                  key="email")
     # Every form must have a submit button.
@@ -246,7 +248,8 @@ else:
                                                   columns='rowTitle',
                                                   values='value',
                                                   aggfunc='sum').reset_index()
-        pivot_df["profit_ratio"] = pivot_df["سود(زیان) خالص"].astype(float)/pivot_df["درآمدهای عملیاتی"].astype(float)
+        pivot_df["profit_ratio"] = (pivot_df["سود(زیان) خالص"].astype(float)
+                                    /pivot_df["درآمدهای عملیاتی"].astype(float))
         pe_df=pivot_df[["profit_ratio", "endToPeriod"]]
         st.line_chart(data=pe_df, x="endToPeriod",
                       y="profit_ratio",
