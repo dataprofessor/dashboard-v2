@@ -244,14 +244,28 @@ else:
             "value",
             "endToPeriod"])
         stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+        stock_data_history["value"] = stock_data_history["value"].astype(float)
         pivot_df = stock_data_history.pivot_table(index='endToPeriod',
                                                   columns='rowTitle',
                                                   values='value',
                                                   aggfunc='sum').reset_index()
+
         pivot_df["profit_ratio"] = (pivot_df["سود(زیان) خالص"].astype(float)
                                     /pivot_df["درآمدهای عملیاتی"].astype(float))
         pe_df=pivot_df[["profit_ratio", "endToPeriod"]]
-        st.line_chart(data=pe_df, x="endToPeriod",
-                      y="profit_ratio",
-                      color=None,
-                      use_container_width=True)
+
+        chart_product = alt.Chart(pivot_df).mark_line().encode(
+                alt.X('endToPeriod:N', title='تاریخ'),
+                alt.Y('profit_ratio:Q', title="میزان عمکرد").axis(format='%'),
+                # alt.Color('column_name:N', title='دسته ها'),
+
+            )
+        chart_product.configure_title(
+                    fontSize=20,
+                    font='Vazirmatn',
+                )
+
+        chart_product.configure(
+            font='Vazirmatn'
+        )
+        st.altair_chart(chart_product, use_container_width=True)
