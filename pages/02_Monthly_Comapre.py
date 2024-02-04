@@ -1,12 +1,11 @@
+"""Comapre monthly data in a customized way"""
+
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plost
-from request import vasahm_query
-from slider import create_range_slider, create_slider
-from request import get_nonce
-from request import get_key
-import altair as alt
+
+from request import vasahm_query, get_key, get_nonce
+from slider import create_range_slider
+
 
 st.set_page_config(layout='wide',
                    page_title="Vasahm Dashboard",
@@ -31,7 +30,7 @@ st.set_page_config(layout='wide',
 #     </style>
 #     """, unsafe_allow_html=True
 # )
-with open( "style.css" ) as css:
+with open( "style.css", encoding='UTF-8') as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 
@@ -39,17 +38,21 @@ with open( "style.css" ) as css:
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
 def get_email_callback():
-    hasError, message = get_nonce(st.session_state.email)
-    if hasError:
+    """Send nonce to entered email."""
+    has_error, message = get_nonce(st.session_state.email)
+    if has_error:
         st.error(message, icon="🚨")
     else:
         submit_nonce = st.form("submit_nonce")
-        nonce = submit_nonce.text_input('کد تایید خود را وارد کنید', placeholder='XXXX', key="nonce")
-        submitted = submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
+        submit_nonce.text_input('کد تایید خود را وارد کنید',
+                                        placeholder='XXXX',
+                                        key="nonce")
+        submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
 
 def get_nonce_callback():
-    hasError, message = get_key(st.session_state.email, st.session_state.nonce)
-    if hasError:
+    """Confirm nonce for login."""
+    has_error, message = get_key(st.session_state.email, st.session_state.nonce)
+    if has_error:
         st.error(message, icon="🚨")
         del st.session_state["nonce"]
     else:
@@ -58,12 +61,14 @@ def get_nonce_callback():
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")
-    email = get_email.text_input('ایمیل خود را وارد کنید', placeholder='example@mail.com', key="email")
+    email = get_email.text_input('ایمیل خود را وارد کنید',
+                                 placeholder='example@mail.com',
+                                 key="email")
     # Every form must have a submit button.
     submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
 else:
 
-    txt = """WITH
+    QUERY_STRING = """WITH
   ranked_dates AS (
     SELECT
       stocks.name,
@@ -135,21 +140,33 @@ from
 group by
   name"""
     print("get table")
-    hasError, data = vasahm_query(txt)
+    has_error, data = vasahm_query(QUERY_STRING)
     print("back table")
-    if hasError:
+    if has_error:
         st.error(data, icon="🚨")
     else:
         stock_data_history = pd.DataFrame(data).fillna(0.0)
 
-        col1_slider = create_range_slider(stock_data_history, "col1_slider", "M/M ratio", "result")
-        col2_slider = create_range_slider(stock_data_history, "col2_slider", "2M/2M ratio", "result2")
-        col3_slider = create_range_slider(stock_data_history, "col3_slider", "3M/3M ratio", "result3")
+        col1_slider = create_range_slider(stock_data_history,
+                                          "col1_slider",
+                                          "M/M ratio",
+                                          "result")
+        col2_slider = create_range_slider(stock_data_history,
+                                          "col2_slider",
+                                          "2M/2M ratio",
+                                          "result2")
+        col3_slider = create_range_slider(stock_data_history,
+                                          "col3_slider",
+                                          "3M/3M ratio",
+                                          "result3")
 
-        filtered_df = stock_data_history[stock_data_history['result'].astype("float").between(col1_slider[0], col1_slider[1])]
-        filtered_df1 = filtered_df[filtered_df['result2'].astype("float").between(col2_slider[0], col2_slider[1])]
-        filtered_df2 = filtered_df1[filtered_df1['result3'].astype("float").between(col3_slider[0], col3_slider[1])]
-        
+        filtered_df = stock_data_history[stock_data_history['result'].astype(
+            "float").between(col1_slider[0], col1_slider[1])]
+        filtered_df1 = filtered_df[filtered_df['result2'].astype(
+            "float").between(col2_slider[0], col2_slider[1])]
+        filtered_df2 = filtered_df1[filtered_df1['result3'].astype(
+            "float").between(col3_slider[0], col3_slider[1])]
+
         st.dataframe(filtered_df2, use_container_width=True, height=600,
                      column_config={
         "result": st.column_config.NumberColumn(
