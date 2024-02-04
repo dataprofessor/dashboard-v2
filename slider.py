@@ -1,7 +1,11 @@
-import streamlit as st
+"""A helper for creating sliders"""
+
 import datetime
 
+import streamlit as st
+
 def create_slider(df, key, title):
+    """Creates a date slider"""
     min_value  = df['date_column'].min()
     max_value  = df['date_column'].max()
     date_slider = st.sidebar.slider(
@@ -14,6 +18,7 @@ def create_slider(df, key, title):
     return date_slider
 
 def create_range_slider(df, key, title, column):
+    """Creates a range slider"""
     min_value  = df[column].astype(float).min()
     max_value  = df[column].astype(float).max()
     range_slider = st.sidebar.slider(

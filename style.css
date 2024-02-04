@@ -11,7 +11,10 @@
 /* Card */
 /* Adapted from https://startbootstrap.com/theme/sb-admin-2 */
 
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100&display=swap'); 
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100&display=swap'); 
+}
 
 html, body, [class*="css"] {
     font-family: 'Vazirmatn', sans-serif; 

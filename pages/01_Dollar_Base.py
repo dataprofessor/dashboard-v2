@@ -8,8 +8,6 @@ from request import get_nonce
 from request import get_key
 import altair as alt
 
-st.session_state.ver = '0.1.2'
-
 st.set_page_config(layout='wide',
                    page_title="Vasahm Dashboard",
                     page_icon="./assets/favicon.ico",
