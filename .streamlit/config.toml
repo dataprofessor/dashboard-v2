@@ -10,6 +10,7 @@ gatherUsageStats = true
 
 [client]
 toolbarMode = "developer"
+showSidebarNavigation = false
 
 [server]
 address = "localhost"
