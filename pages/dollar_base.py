@@ -270,12 +270,12 @@ else:
         st.error(stock_data, icon="🚨")
     else:
         stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
-        "value",
+        "dollar_value",
         "endToPeriod"])
         stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
         pivot_df = stock_data_history.pivot_table(index='endToPeriod',
                                                 columns='rowTitle',
-                                                values='value',
+                                                values='dollar_value',
                                                 aggfunc='sum').reset_index()
         pivot_df["profit_ratio"] = (pivot_df["سود(زیان) خالص"].astype(float)
                                     /pivot_df["درآمدهای عملیاتی"].astype(float))

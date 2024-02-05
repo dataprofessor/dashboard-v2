@@ -4,6 +4,8 @@ import streamlit as st
 import pandas as pd
 
 from request import vasahm_query, get_nonce, get_key
+from menu import add_menu
+
 
 
 st.set_page_config(layout='wide',
@@ -34,6 +36,7 @@ with open( "style.css", encoding="UTF-8") as css:
 
 
 # st.sidebar.image(image="./assets/logo.png")
+add_menu()
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
 def get_email_callback():
