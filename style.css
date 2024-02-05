@@ -11,13 +11,10 @@
 /* Card */
 /* Adapted from https://startbootstrap.com/theme/sb-admin-2 */
 
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100&display=swap'); 
-}
+@import url('https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8');
 
 html, body, [class*="css"] {
-    font-family: 'Vazirmatn', sans-serif; 
+    font-family: 'Vazir Matn', sans-serif; 
     font-size: 18px;
     font-weight: 500;
     color: #091747;

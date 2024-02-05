@@ -12,32 +12,43 @@ from menu import add_menu
 st.session_state.ver = '0.1.5'
 
 st.set_page_config(layout='wide',
-                    page_title="Vasahm Dashboard",
+                    page_title="وسهم",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
 
-# st.markdown(
-#     """
-#     <style>
-#     #MainMenu {visibility: hidden;}
-#     </style>
-#     """,
-#     unsafe_allow_html=True
-# )
-
-# st.markdown(
-#     """
-#     <style>
-#     .stDeployButton {
-#             visibility: hidden;
-#         }
-#     </style>
-#     """, unsafe_allow_html=True
-# )
 with open( "style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 add_menu()
+html = """<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8">
+  <style>
+    body {
+      font-family: 'Vazir Matn', sans-serif;
+      margin: 1px;
+    }
+
+    #content {
+      max-width: 100%; /* Adjust this value based on your design */
+      width: auto;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content">
+    <p>وبسایت در مرحله آزمایشی است، از اطلاعات با احتیاط استفاده کنید. در صورت مشاهده ایراد میتوانید به <a href="https://t.me/Khiaboon_Hafez_Admin" target="_blank">@Khiaboon_Hafez_Admin</a> پیام دهید.</p>
+  </div>
+</body>
+
+</html>
+"""
+st.components.v1.html(html, height=60, scrolling=False)
 # st.sidebar.image(image="./assets/logo.png")
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
@@ -113,9 +124,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(value):Q', title="مبلغ (میلیون ریال)"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart, use_container_width=True)
 
@@ -149,9 +160,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(value):Q', title="تعداد"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -184,9 +195,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(value):Q', title="تعداد"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -217,11 +228,10 @@ else:
             stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
             # specify the type of selection, here single selection is used
             chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
-                color='rowTitle:N',
-                y=alt.Y('value:Q').stack(None),
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('value:Q', title="مبلغ (میلیون ریال)").stack(None),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
-
             st.altair_chart(chart2, use_container_width=True)
 
 
@@ -320,9 +330,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(dollar_value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(dollar_value):Q', title="مبلغ (میلیون دلار)"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart, use_container_width=True)
 
@@ -356,9 +366,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(value):Q', title="تعداد"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -391,9 +401,9 @@ else:
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                color='rowTitle:N',
-                y='sum(value):Q',
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('sum(value):Q', title="تعداد"),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -435,9 +445,9 @@ else:
             stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
             # specify the type of selection, here single selection is used
             chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
-                color='rowTitle:N',
-                y=alt.Y('dollar_value:Q').stack(None),
-                x='endToPeriod:N'
+                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Y('dollar_value:Q', title="مبلغ (میلیون دلار)").stack(None),
+                alt.X('endToPeriod:N',title="تاریخ")
             )
 
             st.altair_chart(chart2, use_container_width=True)

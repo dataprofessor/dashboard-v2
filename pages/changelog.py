@@ -1,9 +1,13 @@
 """Page log for changes and new improvement in project."""
 
 import streamlit as st
+from menu import add_menu
+
 
 with open("style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+add_menu()
+
 
 st.subheader('changelog: `version 0.1.5`', divider='rainbow')
 st.markdown('''

@@ -5,6 +5,8 @@ import pandas as pd
 
 from request import vasahm_query, get_key, get_nonce
 from slider import create_range_slider
+from menu import add_menu
+
 
 
 st.set_page_config(layout='wide',
@@ -32,6 +34,7 @@ st.set_page_config(layout='wide',
 # )
 with open( "style.css", encoding='UTF-8') as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+add_menu()
 
 
 # st.sidebar.image(image="./assets/logo.png")
