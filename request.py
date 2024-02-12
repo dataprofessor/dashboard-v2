@@ -74,3 +74,10 @@ def index_price_history2(ins_code, name):
         columns={'dEven': 'datetime', 'xNivInuClMresIbs': name})
     shiraz['datetime'] = shiraz['datetime'].astype(str)
     return shiraz[["datetime", name]]
+
+
+def get_stock_monthly(stock_name):
+    """Get history monthly data for free users."""
+    url = f"https://api.vasahm.ir/api/monthlyChart/{stock_name}"
+    response = requests.get(url, timeout=60).json()
+    return response
