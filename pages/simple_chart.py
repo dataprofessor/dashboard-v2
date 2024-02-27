@@ -6,15 +6,15 @@ import altair as alt
 
 
 from request import get_stock_monthly
-from slider import create_range_slider
+# from slider import create_range_slider
 from menu import add_menu
 
 
 
 st.set_page_config(layout='wide',
-                   page_title="Vasahm Dashboard",
+                   page_title="وسهم - نمودار ماهانه",
                     page_icon="./assets/favicon.ico",
-                    initial_sidebar_state='expanded')
+                    initial_sidebar_state='collapsed')
 
 with open( "style.css", encoding='UTF-8') as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)

@@ -10,7 +10,7 @@ from menu import add_menu
 
 
 st.set_page_config(layout='wide',
-                   page_title="Vasahm Dashboard",
+                   page_title="وسهم - بررسی جامع گزارشهای ماهانه",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
 
