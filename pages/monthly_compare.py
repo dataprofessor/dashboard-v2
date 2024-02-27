@@ -2,8 +2,10 @@
 
 import streamlit as st
 import pandas as pd
+from streamlit_local_storage import LocalStorage
 
-from request import vasahm_query, get_key, get_nonce
+
+from request import is_authenticate, vasahm_query, get_key, get_nonce
 from slider import create_range_slider
 from menu import add_menu
 
@@ -13,6 +15,8 @@ st.set_page_config(layout='wide',
                    page_title="وسهم - بررسی جامع گزارشهای ماهانه",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
+sessionBrowserS = LocalStorage()
+
 
 # st.markdown(
 #     """
@@ -60,7 +64,17 @@ def get_nonce_callback():
         del st.session_state["nonce"]
     else:
         st.session_state["token"] = message
+        sessionBrowserS.setItem("saved_token", message)
 
+sessionBrowserS.getItem("saved_token", key='temp1')
+if st.session_state.temp1 is not None:
+    if "storage" in st.session_state.temp1:
+        if st.session_state.temp1['storage'] is not None:
+            saved_token = st.session_state.temp1['storage']['value']
+            if is_authenticate(saved_token):
+                st.session_state["token"] = saved_token
+            else:
+                sessionBrowserS.deleteItem("saved_token")
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")

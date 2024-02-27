@@ -16,6 +16,7 @@ st.set_page_config(layout='wide',
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='collapsed')
 
+
 with open( "style.css", encoding='UTF-8') as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 add_menu()
