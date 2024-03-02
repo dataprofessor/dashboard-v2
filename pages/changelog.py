@@ -13,6 +13,12 @@ with open("style.css", encoding="utf-8") as css:
 add_menu()
 
 
+st.subheader('changelog: `version 0.1.6`', divider='rainbow')
+st.markdown('''
+            * اصلاح پروسه لاگین کاربر
+            * عدم خروج کاربر بعد از بازنشانی صفحه
+            * رفع باگهای کوچک''', unsafe_allow_html=False, help=None)
+st.subheader('changelog: `version 0.1.4`', divider='rainbow')
 st.subheader('changelog: `version 0.1.5`', divider='rainbow')
 st.markdown('''
             * اضافه شدن صفحه بررسی عملکرد پورتفو
