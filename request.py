@@ -53,6 +53,27 @@ def get_key(email, nonce):
     else:
         return x["hasError"], x["data"]["Token"]
 
+def is_authenticate(saved_token):
+    """Query query_string on database and retrieve the results."""
+    url = 'https://back.vasahm.com/user/getUserInfo'
+    headers = {
+        "accept": "*/*",
+        "accept-language": "en-GB,en;q=0.9,en-US;q=0.8,fa;q=0.7",
+        "authtoken": saved_token,
+        "content-type": "application/json",
+        "sec-ch-ua": "\"Not_A Brand\";v=\"8\",\"Chromium\";v=\"120\", \"Microsoft Edge\";v=\"120\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site"
+    }
+    x = requests.get(url, headers=headers, timeout=60).json()
+    if x["hasError"]:
+        return False
+    else:
+        return True
+
 def index_price_history(ins_code, name):
     """Get history price of a tehran exchange Fund."""
     url = f"https://cdn.tsetmc.com/api/ClosingPrice/GetChartData/{ins_code}/D"

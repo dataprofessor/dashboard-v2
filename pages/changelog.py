@@ -3,6 +3,10 @@
 import streamlit as st
 from menu import add_menu
 
+st.set_page_config(layout='wide',
+                   page_title="وسهم - بهبودها",
+                    page_icon="./assets/favicon.ico",
+                    initial_sidebar_state='expanded')
 
 with open("style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)

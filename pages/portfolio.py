@@ -4,15 +4,19 @@ in compare to other indexes or funds."""
 import streamlit as st
 import pandas as pd
 import altair as alt
+from streamlit_local_storage import LocalStorage
 
-from request import vasahm_query, get_nonce, get_key, index_price_history, index_price_history2
+
+from request import is_authenticate, vasahm_query, get_nonce, get_key, index_price_history, index_price_history2
 from menu import add_menu
 
 
 st.set_page_config(layout='wide',
-                   page_title="Vasahm Dashboard",
+                   page_title="وسهم - بررسی عملکرد پورتفو",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
+sessionBrowserS = LocalStorage()
+
 
 with open("style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
@@ -115,7 +119,17 @@ def get_nonce_callback():
         del st.session_state["nonce"]
     else:
         st.session_state["token"] = message
+        sessionBrowserS.setItem("saved_token", message)
 
+sessionBrowserS.getItem("saved_token", key='temp1')
+if st.session_state.temp1 is not None:
+    if "storage" in st.session_state.temp1:
+        if st.session_state.temp1['storage'] is not None:
+            saved_token = st.session_state.temp1['storage']['value']
+            if is_authenticate(saved_token):
+                st.session_state["token"] = saved_token
+            else:
+                sessionBrowserS.deleteItem("saved_token")
 
 if "token" not in st .session_state:
     get_email = st.form("get_email")
