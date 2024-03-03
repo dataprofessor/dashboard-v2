@@ -115,10 +115,10 @@ else:
         st.error(stock_data, icon="🚨")
     else:
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("سود سهم", f"{stock_data[0]["estimatedEPS"]}")
-        col2.metric("نسبت سود به قیمت", f"{format(float(stock_data[0]["pe"]), ".2f")}")
-        col3.metric("P/E صنعت", f"{format(float(stock_data[0]["sectorPE"]), ".2f")}")
-        col4.metric("درصد سهامداران عمده", f"{format(stock_data[0]["all_holder_percent"], ".2f")}")
+        col1.metric("سود سهم", f"{stock_data[0]['estimatedEPS']}")
+        col2.metric("نسبت سود به قیمت", f"{format(float(stock_data[0]['pe']), '.2f')}")
+        col3.metric("P/E صنعت", f"{format(float(stock_data[0]['sectorPE']), '.2f')}")
+        col4.metric("درصد سهامداران عمده", f"{format(stock_data[0]['all_holder_percent'], '.2f')}")
 
     tab1, tab2 = st.tabs(["بر اساس ریال", "بر اساس دلار"])
 
