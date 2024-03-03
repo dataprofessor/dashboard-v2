@@ -95,18 +95,38 @@ if "token" not in st.session_state:
     # Every form must have a submit button.
     submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
 else:
+    df = pd.read_csv("data.csv").dropna()
+    list_of_name = df['name'].to_list()
+    name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
+
+    query_string = f"""select
+                \"stockData\".id, \"estimatedEPS\", \"sectorPE\", pe, all_holder_percent, all_holder_share
+            from
+                \"stockData\"
+                INNER JOIN stocks ON \"stockData\".stock_id = stocks.id
+            where
+                stocks.name = '{name}'
+            order by 
+                "stockData".id desc
+            """
+    
+    error, stock_data = vasahm_query(query_string)
+    if error:
+        st.error(stock_data, icon="🚨")
+    else:
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("سود سهم", f"{stock_data[0]["estimatedEPS"]}")
+        col2.metric("نسبت سود به قیمت", f"{format(stock_data[0]["pe"], ".2f")}")
+        col3.metric("P/E صنعت", f"{format(float(stock_data[0]["sectorPE"]), ".2f")}")
+        col4.metric("درصد سهامداران عمده", f"{format(stock_data[0]["all_holder_percent"], ".2f")}")
 
     tab1, tab2 = st.tabs(["بر اساس ریال", "بر اساس دلار"])
 
     with tab1:
-        df = pd.read_csv("data.csv").dropna()
-        list_of_name = df['name'].to_list()
-
-        name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
 
         st.header('گزارش ماهانه فروش', divider='rainbow')
 
-        queryString = queryString = f"""select
+        query_string = f"""select
         \"rowTitle\",
         sum(value) as value,
         \"endToPeriod\"
@@ -124,7 +144,7 @@ else:
         public.\"MonthlyData\".\"rowTitle\",
         public.\"MonthlyData\".\"endToPeriod\"
         """
-        error, stock_data = vasahm_query(queryString)
+        error, stock_data = vasahm_query(query_string)
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -144,7 +164,7 @@ else:
 
 
         st.header('گزارش تعداد تولید', divider='rainbow')
-        queryString = queryString = f"""select
+        query_string = f"""select
         \"rowTitle\",
         sum(value) as value,
         \"endToPeriod\"
@@ -160,7 +180,7 @@ else:
         \"MonthlyData\".\"rowTitle\",
         \"MonthlyData\".\"endToPeriod\"
         """
-        error, stock_data = vasahm_query(queryString)
+        error, stock_data = vasahm_query(query_string)
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -179,7 +199,7 @@ else:
             st.altair_chart(chart_product, use_container_width=True)
 
         st.header('گزارش تعداد فروش', divider='rainbow')
-        queryString = f"""select
+        query_string = f"""select
         \"rowTitle\",
         sum(value) as value,
         \"endToPeriod\"
@@ -195,7 +215,7 @@ else:
         \"MonthlyData\".\"rowTitle\",
         \"MonthlyData\".\"endToPeriod\"
         """
-        error, stock_data = vasahm_query(queryString)
+        error, stock_data = vasahm_query(query_string)
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -215,7 +235,7 @@ else:
 
 
         st.header('درآمدهای عملیاتی و سود', divider='rainbow')
-        queryString = f"""select
+        query_string = f"""select
         \"rowTitle\",
         \"value\",
         \"endToPeriod\"
@@ -230,7 +250,7 @@ else:
         )
         and stocks.name = '{name}'
         """
-        error, stock_data = vasahm_query(queryString)
+        error, stock_data = vasahm_query(query_string)
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -248,7 +268,7 @@ else:
 
 
         st.header('حاشیه سود خالص', divider='rainbow')
-        queryString = f"""select
+        query_string = f"""select
         \"rowTitle\",
         \"value\",
         \"endToPeriod\"
@@ -263,7 +283,7 @@ else:
         )
         and stocks.name = '{name}'
         """
-        error, stock_data = vasahm_query(queryString)
+        error, stock_data = vasahm_query(query_string)
         if error:
             st.error(stock_data, icon="🚨")
         else:

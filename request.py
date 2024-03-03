@@ -68,11 +68,16 @@ def is_authenticate(saved_token):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
     }
-    x = requests.get(url, headers=headers, timeout=60).json()
-    if x["hasError"]:
+    print(f"is_auth {saved_token}")
+    x = requests.get(url, headers=headers, timeout=60)
+    if x.status_code != 200:
         return False
     else:
-        return True
+        x=x.json()
+        if x["hasError"]:
+            return False
+        else:
+            return True
 
 def index_price_history(ins_code, name):
     """Get history price of a tehran exchange Fund."""
