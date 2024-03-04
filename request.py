@@ -26,11 +26,15 @@ def vasahm_query(query_string):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
     }
-    x = requests.post(url, json = myobj, headers=headers, timeout=60).json()
-    if x["hasError"]:
-        return x["hasError"], x["error"]
+    x = requests.post(url, json = myobj, headers=headers, timeout=60)
+    if x.status_code != 200:
+        return False
     else:
-        return x["hasError"], x["data"]["result"]
+        x=x.json()
+        if x["hasError"]:
+            return x["hasError"], x["error"]
+        else:
+            return x["hasError"], x["data"]["result"]
 
 def get_nonce(email):
     """get nonce to entered email."""
