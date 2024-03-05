@@ -28,7 +28,7 @@ def vasahm_query(query_string):
     }
     x = requests.post(url, json = myobj, headers=headers, timeout=60)
     if x.status_code != 200:
-        return False
+        return False, False
     else:
         x=x.json()
         if x["hasError"]:
