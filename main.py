@@ -22,7 +22,7 @@ with open( "style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 add_menu()
-html = """<!DOCTYPE html>
+HTML = """<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
@@ -50,7 +50,7 @@ html = """<!DOCTYPE html>
 
 </html>
 """
-st.components.v1.html(html, height=60, scrolling=False)
+st.components.v1.html(HTML, height=60, scrolling=False)
 # st.sidebar.image(image="./assets/logo.png")
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
