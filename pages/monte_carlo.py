@@ -94,14 +94,14 @@ if data is not None:
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("پیش بینی برای روز آینده", f"{DAYS}")
-    col2.metric("مقدار مورد انتظار", f"{format(
-        round(pd.DataFrame(price_paths).iloc[-1].mean(),2), '.2f')}")
-    col3.metric("میانگین بازدهی سناریوها", f"{format(
+    col2.metric("مقدار مورد انتظار", f"""{format(
+        round(pd.DataFrame(price_paths).iloc[-1].mean(),2), '.2f')}""")
+    col3.metric("میانگین بازدهی سناریوها", f"""{format(
         (round(100*(pd.DataFrame(
             price_paths).iloc[-1].mean()-price_paths[0,1])/pd.DataFrame(
-                price_paths).iloc[-1].mean(),2)), '.2f')}")
-    col4.metric("احتمال ریزش 10 درصدی", f"{format(round(
-        100*probs_find(pd.DataFrame(price_paths),0.9*data["close"].iloc[-1], on='value')), '.2f')}")
+                price_paths).iloc[-1].mean(),2)), '.2f')}""")
+    col4.metric("احتمال ریزش 10 درصدی", f"""{format(round(
+        100*probs_find(pd.DataFrame(price_paths),0.9*data["close"].iloc[-1], on='value')), '.2f')}""")
 
 
     chart = alt.Chart(log_returns.iloc[1:]).mark_bar().encode(
