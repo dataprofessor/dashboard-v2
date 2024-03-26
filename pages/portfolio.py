@@ -7,7 +7,8 @@ import altair as alt
 from streamlit_local_storage import LocalStorage
 
 
-from request import is_authenticate, vasahm_query, get_nonce, get_key, index_price_history, index_price_history2
+from request import get_key, index_price_history, index_price_history2
+from request import is_authenticate, vasahm_query, get_nonce
 from menu import add_menu
 
 
@@ -32,7 +33,7 @@ def del_porto_submition_variable():
     del st.session_state.porto_submition
     if "portfolio_analyzer" in locals():
         del portfolio_analyzer
-html = """<!DOCTYPE html>
+HTML = """<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
 <head>
@@ -61,7 +62,7 @@ html = """<!DOCTYPE html>
 
 </html>
 """
-st.components.v1.html(html, height=60, scrolling=False)
+st.components.v1.html(HTML, height=60, scrolling=False)
 
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
