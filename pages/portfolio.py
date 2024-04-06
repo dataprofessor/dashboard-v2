@@ -83,8 +83,8 @@ def create_form():
     portfolio_analyzer = st.form("portfolio_analyzer")
 
     cols2 = portfolio_analyzer.columns(2, gap="small")
-    cols2[0].text_input('تاریخ شروع', placeholder='14010130', key="portfolio_month_start")
-    cols2[1].text_input('تاریخ پایان', placeholder='14010130', key="portfolio_month_finish")
+    cols2[0].text_input('تاریخ شروع', placeholder='14020101', key="portfolio_month_start")
+    cols2[1].text_input('تاریخ پایان', placeholder='14020101', key="portfolio_month_finish")
     cols = portfolio_analyzer.columns(2, gap="small")
     for _ in range(st.session_state.portfo_number):
         cols[0].selectbox("لیست سهام", options = list_of_name, key=f"stock_name_{_}")
