@@ -13,6 +13,10 @@ with open("style.css", encoding="utf-8") as css:
 add_menu()
 
 
+st.subheader('changelog: `version 0.1.7`', divider='rainbow')
+st.markdown('''
+            * تغییر فرآیند لاگین کردن
+            * رفع باگهای کوچک''', unsafe_allow_html=False, help=None)
 st.subheader('changelog: `version 0.1.6`', divider='rainbow')
 st.markdown('''
             * اضافه شدن تحلیل مونته کارلو شاخص های مهم
