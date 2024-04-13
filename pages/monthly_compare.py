@@ -2,10 +2,9 @@
 
 import streamlit as st
 import pandas as pd
-from streamlit_local_storage import LocalStorage
 
-
-from request import is_authenticate, vasahm_query, get_key, get_nonce
+from login import check_local_token, login
+from request import vasahm_query
 from slider import create_range_slider
 from menu import add_menu
 
@@ -15,74 +14,17 @@ st.set_page_config(layout='wide',
                    page_title="وسهم - بررسی جامع گزارشهای ماهانه",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
-sessionBrowserS = LocalStorage()
 
-
-# st.markdown(
-#     """
-#     <style>
-#     #MainMenu {visibility: hidden;}
-#     </style>
-#     """,
-#     unsafe_allow_html=True
-# )
-
-# st.markdown(
-#     """
-#     <style>
-#     .stDeployButton {
-#             visibility: hidden;
-#         }
-#     </style>
-#     """, unsafe_allow_html=True
-# )
 with open( "style.css", encoding='UTF-8') as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 add_menu()
 
 
-# st.sidebar.image(image="./assets/logo.png")
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
-def get_email_callback():
-    """Send nonce to entered email."""
-    has_error, message = get_nonce(st.session_state.email)
-    if has_error:
-        st.error(message, icon="🚨")
-    else:
-        submit_nonce = st.form("submit_nonce")
-        submit_nonce.text_input('کد تایید خود را وارد کنید',
-                                        placeholder='XXXX',
-                                        key="nonce")
-        submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
-
-def get_nonce_callback():
-    """Confirm nonce for login."""
-    has_error, message = get_key(st.session_state.email, st.session_state.nonce)
-    if has_error:
-        st.error(message, icon="🚨")
-        del st.session_state["nonce"]
-    else:
-        st.session_state["token"] = message
-        sessionBrowserS.setItem("saved_token", message)
-
-sessionBrowserS.getItem("saved_token", key='temp1')
-if st.session_state.temp1 is not None:
-    if "storage" in st.session_state.temp1:
-        if st.session_state.temp1['storage'] is not None:
-            saved_token = st.session_state.temp1['storage']['value']
-            if is_authenticate(saved_token):
-                st.session_state["token"] = saved_token
-            else:
-                sessionBrowserS.deleteItem("saved_token")
-
-if "token" not in st .session_state:
-    get_email = st.form("get_email")
-    email = get_email.text_input('ایمیل خود را وارد کنید',
-                                 placeholder='example@mail.com',
-                                 key="email")
-    # Every form must have a submit button.
-    submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
+check_local_token()
+if "token" not in st.session_state:
+    login()
 else:
 
     QUERY_STRING = """WITH

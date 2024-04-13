@@ -28,13 +28,14 @@ def vasahm_query(query_string):
     }
     x = requests.post(url, json = myobj, headers=headers, timeout=60)
     if x.status_code != 200:
-        return False, False
+        return_value = [False, False]
     else:
         x=x.json()
         if x["hasError"]:
-            return x["hasError"], x["error"]
+            return_value = x["hasError"], x["error"]
         else:
-            return x["hasError"], x["data"]["result"]
+            return_value = x["hasError"], x["data"]["result"]
+    return return_value
 
 def get_nonce(email):
     """get nonce to entered email."""
@@ -43,9 +44,10 @@ def get_nonce(email):
 
     x = requests.post(url, json = myobj, timeout=60).json()
     if x["hasError"]:
-        return x["hasError"], x["error"]["message"]
+        return_value = x["hasError"], x["error"]["message"]
     else:
-        return x["hasError"], x["message"]
+        return_value = x["hasError"], x["message"]
+    return return_value
 
 def get_key(email, nonce):
     """Confirm nonce for login."""
@@ -53,9 +55,10 @@ def get_key(email, nonce):
     myobj = {'Email': email, "Nonce": nonce}
     x = requests.post(url, json = myobj, timeout=60).json()
     if x["hasError"]:
-        return x["hasError"], x["error"]["message"]
+        return_value = x["hasError"], x["error"]["message"]
     else:
-        return x["hasError"], x["data"]["Token"]
+        return_value = x["hasError"], x["data"]["Token"]
+    return return_value
 
 def is_authenticate(saved_token):
     """Query query_string on database and retrieve the results."""
@@ -72,16 +75,16 @@ def is_authenticate(saved_token):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
     }
-    print(f"is_auth {saved_token}")
     x = requests.get(url, headers=headers, timeout=60)
     if x.status_code != 200:
-        return False
+        return_value = False
     else:
         x=x.json()
         if x["hasError"]:
-            return False
+            return_value = False
         else:
-            return True
+            return_value = True
+    return return_value
 
 def index_price_history(ins_code, name):
     """Get history price of a tehran exchange Fund."""

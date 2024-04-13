@@ -4,20 +4,18 @@ in compare to other indexes or funds."""
 import streamlit as st
 import pandas as pd
 import altair as alt
-from streamlit_local_storage import LocalStorage
 
-
-from request import get_key, index_price_history, index_price_history2
-from request import is_authenticate, vasahm_query, get_nonce
+from login import check_local_token, login
+from request import index_price_history, index_price_history2
+from request import vasahm_query
 from menu import add_menu
+from text_constant import PORTFOLIO_PAGE
 
 
 st.set_page_config(layout='wide',
                    page_title="وسهم - بررسی عملکرد پورتفو",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
-sessionBrowserS = LocalStorage()
-
 
 with open("style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
@@ -33,36 +31,7 @@ def del_porto_submition_variable():
     del st.session_state.porto_submition
     if "portfolio_analyzer" in locals():
         del portfolio_analyzer
-HTML = """<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8">
-  <style>
-    body {
-      font-family: 'Vazir Matn', sans-serif;
-      margin: 1px;
-    }
-
-    #content {
-      max-width: 100%; /* Adjust this value based on your design */
-      width: auto;
-      display: inline-block;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="content">
-    <p>میتوانید برای مشاوره از طریق <a href="https://t.me/milad_mousavi_trader" target="_blank">@milad_mousavi_trader</a>با ما در تماس باشید.</p>
-  </div>
-</body>
-
-</html>
-"""
-st.components.v1.html(HTML, height=60, scrolling=False)
+st.components.v1.html(PORTFOLIO_PAGE, height=60, scrolling=False)
 
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 
@@ -102,42 +71,9 @@ def create_form():
     ['شاخص کل'], key="indexes")
     portfolio_analyzer.form_submit_button("بررسی عملکرد سبد", on_click=add_submit_state)
 
-def get_email_callback():
-    """Send nonce to entered email."""
-    has_error, message = get_nonce(st.session_state.email)
-    if has_error:
-        st.error(message, icon="🚨")
-    else:
-        submit_nonce = st.form("submit_nonce")
-        submit_nonce.text_input('کد تایید خود را وارد کنید', placeholder='XXXX', key="nonce")
-        submit_nonce.form_submit_button("ارسال", on_click = get_nonce_callback )
-
-def get_nonce_callback():
-    """Confirm nonce for login."""
-    has_error, message = get_key(st.session_state.email, st.session_state.nonce)
-    if has_error:
-        st.error(message, icon="🚨")
-        del st.session_state["nonce"]
-    else:
-        st.session_state["token"] = message
-        sessionBrowserS.setItem("saved_token", message)
-
-sessionBrowserS.getItem("saved_token", key='temp1')
-if st.session_state.temp1 is not None:
-    if "storage" in st.session_state.temp1:
-        if st.session_state.temp1['storage'] is not None:
-            saved_token = st.session_state.temp1['storage']['value']
-            if is_authenticate(saved_token):
-                st.session_state["token"] = saved_token
-            else:
-                sessionBrowserS.deleteItem("saved_token")
-
-if "token" not in st .session_state:
-    get_email = st.form("get_email")
-    email = get_email.text_input('ایمیل خود را وارد کنید',
-                                 placeholder='example@mail.com',
-                                 key="email")
-    submitted = get_email.form_submit_button("دریافت کد", on_click = get_email_callback )
+check_local_token()
+if "token" not in st.session_state:
+    login()
 else:
     if "porto_submition" not in st.session_state:
         st.number_input('تعداد سهام موجود در سبد خود را وارد کنید',
