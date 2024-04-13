@@ -8,6 +8,7 @@ import altair as alt
 from login import check_local_token, login
 from request import vasahm_query
 from menu import add_menu
+from text_constant import MAIN_PAGE
 
 st.set_page_config(layout='wide',
                     page_title="وسهم",
@@ -19,35 +20,7 @@ with open( "style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
 
 add_menu()
-HTML = """<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8">
-  <style>
-    body {
-      font-family: 'Vazir Matn', sans-serif;
-      margin: 1px;
-    }
-
-    #content {
-      max-width: 100%; /* Adjust this value based on your design */
-      width: auto;
-      display: inline-block;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="content">
-    <p>وبسایت در مرحله آزمایشی است، از اطلاعات با احتیاط استفاده کنید. در صورت مشاهده ایراد میتوانید به تست<a href="https://t.me/Khiaboon_Hafez_Admin" target="_blank">@Khiaboon_Hafez_Admin</a> پیام دهید.</p>
-  </div>
-</body>
-
-</html>
-"""
-st.components.v1.html(HTML, height=60, scrolling=False)
+st.components.v1.html(MAIN_PAGE, height=60, scrolling=False)
 # st.sidebar.image(image="./assets/logo.png")
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 

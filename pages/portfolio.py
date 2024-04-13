@@ -9,6 +9,7 @@ from login import check_local_token, login
 from request import index_price_history, index_price_history2
 from request import vasahm_query
 from menu import add_menu
+from text_constant import PORTFOLIO_PAGE
 
 
 st.set_page_config(layout='wide',
@@ -30,36 +31,7 @@ def del_porto_submition_variable():
     del st.session_state.porto_submition
     if "portfolio_analyzer" in locals():
         del portfolio_analyzer
-HTML = """<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8">
-  <style>
-    body {
-      font-family: 'Vazir Matn', sans-serif;
-      margin: 1px;
-    }
-
-    #content {
-      max-width: 100%; /* Adjust this value based on your design */
-      width: auto;
-      display: inline-block;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="content">
-    <p>میتوانید برای مشاوره از طریق <a href="https://t.me/milad_mousavi_trader" target="_blank">@milad_mousavi_trader</a>با ما در تماس باشید.</p>
-  </div>
-</body>
-
-</html>
-"""
-st.components.v1.html(HTML, height=60, scrolling=False)
+st.components.v1.html(PORTFOLIO_PAGE, height=60, scrolling=False)
 
 st.sidebar.header(f'Vasahm DashBoard `{st.session_state.ver}`')
 

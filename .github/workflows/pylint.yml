@@ -24,6 +24,7 @@ jobs:
         pip install altair
         pip install numpy
         pip install scipy
+        pip install streamlit-local-storage
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
