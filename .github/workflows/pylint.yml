@@ -18,6 +18,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
+        pip install beautifulsoup4
+        pip install streamlit
+        pip install pandas
+        pip install altair
+        pip install numpy
+        pip install scipy
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
