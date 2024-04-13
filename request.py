@@ -72,7 +72,6 @@ def is_authenticate(saved_token):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
     }
-    print(f"is_auth {saved_token}")
     x = requests.get(url, headers=headers, timeout=60)
     if x.status_code != 200:
         return False
