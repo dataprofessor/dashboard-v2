@@ -25,6 +25,7 @@ jobs:
         pip install numpy
         pip install scipy
         pip install streamlit-local-storage
+        pip install -e .
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
