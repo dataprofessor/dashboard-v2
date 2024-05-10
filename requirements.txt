@@ -49,6 +49,9 @@ watchdog==3.0.0
 zipp==3.17.0
 pylint
 streamlit-local-storage
-matplotlib
+matplotlib==3.8.4
 seaborn
 scipy
+python-bidi == 0.4.2
+arabic_reshaper
+statsmodels
