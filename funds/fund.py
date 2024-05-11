@@ -1,4 +1,5 @@
-from datetime import datetime
+"""fund class use for calculating funds parameters"""
+# from datetime import datetime
 import requests
 import json
 import pandas as pd
