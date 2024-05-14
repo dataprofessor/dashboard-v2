@@ -1,5 +1,6 @@
 """Plot Some main monthly and quarterly charts"""
-
+from pathlib import Path
+import shutil
 
 import streamlit as st
 import pandas as pd
@@ -14,10 +15,31 @@ st.set_page_config(layout='wide',
                     page_title="وسهم",
                     page_icon="./assets/favicon.ico",
                     initial_sidebar_state='expanded')
-st.session_state.ver = '0.1.5'
+st.session_state.ver = '0.1.7'
+
+STREAMLIT_STATIC_PATH = Path(st.__path__[0]) / "static/static"
+CSS_PATH = STREAMLIT_STATIC_PATH / "media/"
+if not CSS_PATH.is_dir():
+    CSS_PATH.mkdir()
+
+css_file = CSS_PATH / "IRANSansWeb.ttf"
+if not css_file.exists():
+    shutil.copy("assets/font/IRANSansWeb.ttf", css_file)
 
 with open( "style.css", encoding="utf-8") as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+
+def sfmono():
+    """alrair chart theme"""
+    font = "iransans"
+    return {
+        "config" : {
+            "font": font
+        }
+    }
+
+alt.themes.register('sfmono', sfmono)
+alt.themes.enable('sfmono')
 
 add_menu()
 st.components.v1.html(MAIN_PAGE, height=60, scrolling=False)
