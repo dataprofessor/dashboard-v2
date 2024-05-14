@@ -1,11 +1,7 @@
-
-
-
-
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 
@@ -222,9 +218,9 @@ class Metrics():
         drawdowns = (cumulative_returns / cumulative_max - 1) * 100  # Convert to percentage
 
         # Plot drawdowns over time
-        plt.figure(figsize=(10, 6))
-        drawdowns.plot(title='Drawdown Analysis', ylabel='Drawdown (%)')
-        plt.show()
+        # plt.figure(figsize=(10, 6))
+        # drawdowns.plot(title='Drawdown Analysis', ylabel='Drawdown (%)')
+        # plt.show()
 
     def portfolio_turnover():
         # Assuming you have a pandas DataFrame with historical prices or NAV
