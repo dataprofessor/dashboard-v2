@@ -13,7 +13,10 @@ config.read('config.ini')
 def vasahm_query(query_string):
     """Query query_string on database and retrieve the results."""
     url = 'https://back.vasahm.com/user/runQuery'
-    myobj = {'queryString': query_string}
+    myobj = {
+                'queryString': query_string,
+                'database': config["server"]["database"]
+            }
     headers = {
         "accept": "*/*",
         "accept-language": "en-GB,en;q=0.9,en-US;q=0.8,fa;q=0.7",
