@@ -11,6 +11,8 @@ from request import vasahm_query
 from menu import add_menu
 from text_constant import MAIN_PAGE
 
+from pages.helper.query import Queries
+
 st.set_page_config(layout='wide',
                     page_title="وسهم",
                     page_icon="./assets/favicon.ico",
@@ -54,18 +56,9 @@ else:
     list_of_name = df['name'].to_list()
     name = st.sidebar.selectbox("لیست سهام", options = list_of_name)
 
-    query_string = f"""select
-                \"stockData\".id, \"estimatedEPS\", \"sectorPE\", pe, all_holder_percent, all_holder_share
-            from
-                \"stockData\"
-                INNER JOIN stocks ON \"stockData\".stock_id = stocks.id
-            where
-                stocks.name = '{name}'
-            order by 
-                "stockData".id desc
-            """
+    queries = Queries(name)
 
-    error, stock_data = vasahm_query(query_string)
+    error, stock_data = vasahm_query(queries.get_stock_data())
     if error:
         st.error(stock_data, icon="🚨")
     else:
@@ -81,25 +74,7 @@ else:
 
         st.header('گزارش ماهانه فروش', divider='rainbow')
 
-        query_string = f"""select
-        \"rowTitle\",
-        sum(value) as value,
-        \"endToPeriod\"
-    from
-        public.\"MonthlyData\"
-        INNER JOIN stocks ON public.\"MonthlyData\".stock_id = stocks.id
-    where
-        (
-        public.\"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
-        or public.\"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
-        or public.\"MonthlyData\".\"columnTitle\" = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
-        )
-        and stocks.name = '{name}'
-    group by
-        public.\"MonthlyData\".\"rowTitle\",
-        public.\"MonthlyData\".\"endToPeriod\"
-        """
-        error, stock_data = vasahm_query(query_string)
+        error, stock_data = vasahm_query(queries.get_monthly_sell_value_data())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -119,23 +94,8 @@ else:
 
 
         st.header('گزارش تعداد تولید', divider='rainbow')
-        query_string = f"""select
-        \"rowTitle\",
-        sum(value) as value,
-        \"endToPeriod\"
-    from
-        \"MonthlyData\"
-        INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
-    where
-        (
-        \"MonthlyData\".\"columnTitle\" = 'تعداد تولید'
-        )
-        and stocks.name = '{name}'
-    group by
-        \"MonthlyData\".\"rowTitle\",
-        \"MonthlyData\".\"endToPeriod\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_monthly_production_value_data())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -154,23 +114,8 @@ else:
             st.altair_chart(chart_product, use_container_width=True)
 
         st.header('گزارش تعداد فروش', divider='rainbow')
-        query_string = f"""select
-        \"rowTitle\",
-        sum(value) as value,
-        \"endToPeriod\"
-    from
-        \"MonthlyData\"
-        INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
-    where
-        (
-        \"MonthlyData\".\"columnTitle\" = 'تعداد فروش'
-        )
-        and stocks.name = '{name}'
-    group by
-        \"MonthlyData\".\"rowTitle\",
-        \"MonthlyData\".\"endToPeriod\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_monthly_sell_no_data())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -190,22 +135,8 @@ else:
 
 
         st.header('درآمدهای عملیاتی و سود', divider='rainbow')
-        query_string = f"""select
-        \"rowTitle\",
-        \"value\",
-        \"endToPeriod\"
-    from
-        \"QuarterlyData\"
-        INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
-    where
-        (
-        \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
-        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
-        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
-        )
-        and stocks.name = '{name}'
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_quarterly_sell_and_profit())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -223,22 +154,8 @@ else:
 
 
         st.header('حاشیه سود خالص', divider='rainbow')
-        query_string = f"""select
-        \"rowTitle\",
-        \"value\",
-        \"endToPeriod\"
-    from
-        \"QuarterlyData\"
-        INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
-    where
-        (
-        \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
-        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
-        or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
-        )
-        and stocks.name = '{name}'
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_quarterly_profit_ratio())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -276,36 +193,7 @@ else:
 
         st.header('گزارش ماهانه فروش - دلاری', divider='rainbow')
 
-        query_string = f"""WITH
-        ranked_dates AS (
-            select
-            \"rowTitle\",
-            sum(value) as value,
-            \"endToPeriod\"
-            from
-            \"MonthlyData\"
-            INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
-            where
-            (
-            \"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
-            or \"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
-            or \"MonthlyData\".\"columnTitle\" = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
-            )
-            and stocks.name = '{name}'
-            group by
-            \"MonthlyData\".\"rowTitle\",
-            \"MonthlyData\".\"endToPeriod\"
-        )
-        select
-        \"rowTitle\",
-        value / dollar.rate * 1000000 As dollar_value,
-        \"endToPeriod\"
-        from
-        ranked_dates
-        INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
-        """
-
-        error, stock_data = vasahm_query(query_string)
+        error, stock_data = vasahm_query(queries.get_monthly_sell_value_data(dollar=True))
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -325,23 +213,8 @@ else:
 
 
         st.header('گزارش تعداد تولید', divider='rainbow')
-        query_string = f"""select
-            \"rowTitle\",
-            sum(value) as value,
-            \"endToPeriod\"
-        from
-            \"MonthlyData\"
-            INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
-        where
-            (
-            \"MonthlyData\".\"columnTitle\" = 'تعداد تولید'
-            )
-            and stocks.name = '{name}'
-        group by
-            \"MonthlyData\".\"rowTitle\",
-            \"MonthlyData\".\"endToPeriod\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_monthly_production_value_data())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -360,23 +233,8 @@ else:
             st.altair_chart(chart_product, use_container_width=True)
 
         st.header('گزارش تعداد فروش', divider='rainbow')
-        query_string = f"""select
-            \"rowTitle\",
-            sum(value) as value,
-            \"endToPeriod\"
-        from
-            \"MonthlyData\"
-            INNER JOIN stocks ON \"MonthlyData\".stock_id = stocks.id
-        where
-            (
-            \"MonthlyData\".\"columnTitle\" = 'تعداد فروش'
-            )
-            and stocks.name = '{name}'
-        group by
-            \"MonthlyData\".\"rowTitle\",
-            \"MonthlyData\".\"endToPeriod\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_monthly_sell_no_data())
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -396,32 +254,8 @@ else:
 
 
         st.header('درآمدهای عملیاتی و سود - دلاری', divider='rainbow')
-        query_string = f"""WITH
-        ranked_dates AS (
-            select
-            \"rowTitle\",
-            value,
-            \"endToPeriod\"
-            from
-            \"QuarterlyData\"
-            INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
-            where
-            (
-                \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
-                or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
-                or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
-            )
-            and stocks.name = '{name}'
-        )
-        select
-        \"rowTitle\",
-        value::float / dollar.rate * 1000000 As dollar_value,
-        \"endToPeriod\"
-        from
-        ranked_dates
-        INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_quarterly_sell_and_profit(dollar=True))
         if error:
             st.error(stock_data, icon="🚨")
         else:
@@ -440,32 +274,8 @@ else:
             st.altair_chart(chart2, use_container_width=True)
 
         st.header('حاشیه سود خالص - دلاری', divider='rainbow')
-        query_string = f"""WITH
-        ranked_dates AS (
-            select
-            \"rowTitle\",
-            value,
-            \"endToPeriod\"
-            from
-            \"QuarterlyData\"
-            INNER JOIN stocks ON \"QuarterlyData\".stock_id = stocks.id
-            where
-            (
-                \"QuarterlyData\".\"rowTitle\" = 'درآمدهای عملیاتی'
-                or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) ناخالص'
-                or \"QuarterlyData\".\"rowTitle\" = 'سود(زیان) خالص'
-            )
-            and stocks.name = '{name}'
-        )
-        select
-        \"rowTitle\",
-        value::float / dollar.rate * 1000000 As dollar_value,
-        \"endToPeriod\"
-        from
-        ranked_dates
-        INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
-        """
-        error, stock_data = vasahm_query(query_string)
+
+        error, stock_data = vasahm_query(queries.get_quarterly_profit_ratio(dollar=True))
         if error:
             st.error(stock_data, icon="🚨")
         else:
