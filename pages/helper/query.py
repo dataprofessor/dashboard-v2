@@ -35,13 +35,11 @@ class Queries():
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
                     where
-                        (
-                        public.all_data.column_title = 'مبلغ فروش (میلیون ریال)'
-                        or public.all_data.column_title = 'درآمد شناسایی شده'
-                        or public.all_data.column_title = 'درآمد محقق شده طی دوره یک ماهه - لیزینگ'
-                        )
+                        public.all_data.column_title IN ('مبلغ فروش (میلیون ریال)' ,'درآمد شناسایی شده', 'درآمد محقق شده طی دوره یک ماهه - لیزینگ')
                         and stocks.name = '{self.name}'
-                        and (public.report_list.\"letterCode\" = 'ن-۳۰' or public.report_list.\"letterCode\" = 'ن-۳۱')
+                        and public.report_list.\"letterCode\" IN ( 'ن-۳۰', 'ن-۳۱')
+                        and public.all_data.deleted = false
+                        and public.all_data.row_title NOT IN ('برگشت از فروش:', 'جمع', 'جمع برگشت از فروش', 'جمع درآمد ارائه خدمات', 'جمع فروش داخلی', 'جمع فروش صادراتی', 'درآمد ارائه خدمات:', 'فروش داخلی:', 'فروش صادراتی:', '')
                     group by
                         public.all_data.row_title,
                         public.all_data.end_to_period
@@ -61,11 +59,11 @@ class Queries():
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
                     where
-                        (
                         public.all_data.column_title = 'تعداد تولید'
-                        )
                         and stocks.name = '{self.name}'
-                        and (public.report_list.\"letterCode\" = 'ن-۳۰' or public.report_list.\"letterCode\" = 'ن-۳۱')
+                        and public.report_list.\"letterCode\" IN ( 'ن-۳۰', 'ن-۳۱')
+                        and public.all_data.deleted = false
+                        and public.all_data.row_title NOT IN ('برگشت از فروش:', 'جمع', 'جمع برگشت از فروش', 'جمع درآمد ارائه خدمات', 'جمع فروش داخلی', 'جمع فروش صادراتی', 'درآمد ارائه خدمات:', 'فروش داخلی:', 'فروش صادراتی:', '')
                     group by
                         public.all_data.row_title,
                         public.all_data.end_to_period
@@ -83,11 +81,11 @@ class Queries():
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
                     where
-                        (
                         public.all_data.column_title = 'تعداد فروش'
-                        )
                         and stocks.name = '{self.name}'
-                        and (public.report_list.\"letterCode\" = 'ن-۳۰' or public.report_list.\"letterCode\" = 'ن-۳۱')
+                        and public.report_list.\"letterCode\" IN ( 'ن-۳۰', 'ن-۳۱')
+                        and public.all_data.deleted = false
+                        and public.all_data.row_title NOT IN ('برگشت از فروش:', 'جمع', 'جمع برگشت از فروش', 'جمع درآمد ارائه خدمات', 'جمع فروش داخلی', 'جمع فروش صادراتی', 'درآمد ارائه خدمات:', 'فروش داخلی:', 'فروش صادراتی:', '')
                     group by
                         public.all_data.row_title,
                         public.all_data.end_to_period
@@ -105,13 +103,10 @@ class Queries():
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
                     where
-                        (
-                        public.all_data.column_title = 'درآمدهای عملیاتی'
-                        or public.all_data.column_title = 'سود(زیان) ناخالص'
-                        or public.all_data.column_title = 'سود(زیان) خالص'
-                        )
+                        public.all_data.row_title IN ('درآمدهای عملیاتی','سود(زیان) ناخالص','سود(زیان) خالص')
                         and stocks.name = '{self.name}'
                         and (public.report_list.\"letterCode\" = 'ن-۱۰')
+                        and public.all_data.deleted = false
         """
         if dollar:
             string = self._dollar_query(string)
@@ -128,13 +123,10 @@ class Queries():
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
                     where
-                        (
-                        public.all_data.column_title = 'درآمدهای عملیاتی'
-                        or public.all_data.column_title = 'سود(زیان) ناخالص'
-                        or public.all_data.column_title = 'سود(زیان) خالص'
-                        )
+                        public.all_data.row_title IN ('درآمدهای عملیاتی','سود(زیان) ناخالص','سود(زیان) خالص')
                         and stocks.name = '{self.name}'
                         and (public.report_list.\"letterCode\" = 'ن-۱۰')
+                        and public.all_data.deleted = false
         """
         if dollar:
             string = self._dollar_query(string)
@@ -172,16 +164,11 @@ class Queries():
                                 INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                                 INNER JOIN report_list ON public.all_data.report_id = report_list.id
                             where
-                                (
-                                    stocks.\"stockType\" = '300'
-                                    OR stocks.\"stockType\" = '303'
-                                    OR stocks.\"stockType\" = '309'
-                                )
+                                stocks.\"stockType\" IN ('300','303','309')
                                 AND (
-                                    public.all_data.column_title = 'مبلغ فروش (میلیون ریال)'
-                                    OR public.all_data.column_title = 'درآمد شناسایی شده'
-                                )
-                                AND (public.report_list.\"letterCode\" = 'ن-۳۰' or public.report_list.\"letterCode\" = 'ن-۳۱')
+                                    public.all_data.column_title IN 'مبلغ فروش (میلیون ریال)','درآمد شناسایی شده')
+                                and public.report_list.\"letterCode\" IN ( 'ن-۳۰', 'ن-۳۱')
+                                and public.all_data.deleted = false
                             group by
                                 stocks.name,
                                 public.all_data.end_to_period

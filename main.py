@@ -63,10 +63,13 @@ else:
         st.error(stock_data, icon="🚨")
     else:
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("سود سهم", f"{stock_data[0]['estimatedEPS']}")
-        col2.metric("نسبت سود به قیمت", f"{format(float(stock_data[0]['pe']), '.2f')}")
-        col3.metric("P/E صنعت", f"{format(float(stock_data[0]['sectorPE']), '.2f')}")
-        col4.metric("درصد سهامداران عمده", f"{format(stock_data[0]['all_holder_percent'], '.2f')}")
+        try:
+            col1.metric("سود سهم", f"{stock_data[0]['estimatedEPS']}")
+            col2.metric("نسبت سود به قیمت", f"{format(float(stock_data[0]['pe']), '.2f')}")
+            col3.metric("P/E صنعت", f"{format(float(stock_data[0]['sectorPE']), '.2f')}")
+            col4.metric("درصد سهامداران عمده", f"{format(stock_data[0]['all_holder_percent'], '.2f')}")
+        except:
+            pass
 
     tab1, tab2 = st.tabs(["بر اساس ریال", "بر اساس دلار"])
 
@@ -78,17 +81,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
                 "value",
-                "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+                "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(value):Q', title="مبلغ (میلیون ریال)"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart, use_container_width=True)
 
@@ -99,17 +102,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
                 "value",
-                "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+                "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(value):Q', title="تعداد"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -119,17 +122,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
                 "value",
-                "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+                "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(value):Q', title="تعداد"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -140,15 +143,15 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
                 "value",
-                "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+                "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('value:Q', title="مبلغ (میلیون ریال)").stack(None),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart2, use_container_width=True)
 
@@ -159,22 +162,22 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
                 "value",
-                "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+                "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             stock_data_history["value"] = stock_data_history["value"].astype(float)
-            pivot_df = stock_data_history.pivot_table(index='endToPeriod',
-                                                    columns='rowTitle',
+            pivot_df = stock_data_history.pivot_table(index='end_to_period',
+                                                    columns='row_title',
                                                     values='value',
                                                     aggfunc='sum').reset_index()
 
             pivot_df["profit_ratio"] = (pivot_df["سود(زیان) خالص"].astype(float)
                                         /pivot_df["درآمدهای عملیاتی"].astype(float))
-            pe_df=pivot_df[["profit_ratio", "endToPeriod"]]
+            pe_df=pivot_df[["profit_ratio", "end_to_period"]]
 
             chart_product = alt.Chart(pivot_df).mark_line().encode(
-                    alt.X('endToPeriod:N', title='تاریخ'),
+                    alt.X('end_to_period:N', title='تاریخ'),
                     alt.Y('profit_ratio:Q', title="میزان عمکرد").axis(format='%'),
                     # alt.Color('column_name:N', title='دسته ها'),
 
@@ -197,17 +200,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
             "dollar_value",
-            "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+            "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(dollar_value):Q', title="مبلغ (میلیون دلار)"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart, use_container_width=True)
 
@@ -218,17 +221,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
             "value",
-            "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+            "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(value):Q', title="تعداد"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -238,17 +241,17 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
             "value",
-            "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+            "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             selector = alt.selection_single(encodings=['x', 'color'])
 
             chart_product = alt.Chart(stock_data_history).mark_bar().encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('sum(value):Q', title="تعداد"),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
             st.altair_chart(chart_product, use_container_width=True)
 
@@ -259,16 +262,16 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
             "dollar_value",
-            "endToPeriod"])
+            "end_to_period"])
 
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
             # specify the type of selection, here single selection is used
             chart2 = alt.Chart(stock_data_history).mark_area(opacity=0.3).encode(
-                alt.Color('rowTitle:N', title="سرفصلها"),
+                alt.Color('row_title:N', title="سرفصلها"),
                 alt.Y('dollar_value:Q', title="مبلغ (میلیون دلار)").stack(None),
-                alt.X('endToPeriod:N',title="تاریخ")
+                alt.X('end_to_period:N',title="تاریخ")
             )
 
             st.altair_chart(chart2, use_container_width=True)
@@ -279,12 +282,12 @@ else:
         if error:
             st.error(stock_data, icon="🚨")
         else:
-            stock_data_history = pd.DataFrame(stock_data, columns=["rowTitle",
+            stock_data_history = pd.DataFrame(stock_data, columns=["row_title",
             "dollar_value",
-            "endToPeriod"])
-            stock_data_history["endToPeriod"] = stock_data_history["endToPeriod"].astype(str)
-            pivot_df = stock_data_history.pivot_table(index='endToPeriod',
-                                                    columns='rowTitle',
+            "end_to_period"])
+            stock_data_history["end_to_period"] = stock_data_history["end_to_period"].astype(str)
+            pivot_df = stock_data_history.pivot_table(index='end_to_period',
+                                                    columns='row_title',
                                                     values='dollar_value',
                                                     aggfunc='sum').reset_index()
             pivot_df["profit_ratio"] = (pivot_df["سود(زیان) خالص"].astype(float)
@@ -292,7 +295,7 @@ else:
 
             chart_product = alt.Chart(pivot_df,
                                     height=600).mark_line().encode(
-                            alt.X('endToPeriod:N', title='تاریخ'),
+                            alt.X('end_to_period:N', title='تاریخ'),
                             alt.Y('profit_ratio:Q', title="میزان عمکرد").axis(format='%'),
                             # alt.Color('column_name:N', title='دسته ها'),
                         )

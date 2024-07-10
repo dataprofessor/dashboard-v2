@@ -33,15 +33,12 @@ def get_nonce_callback():
 def check_local_token():
     """check user login is in local storage or not"""
     local_storage = LocalStorage()
-    local_storage.getItem("saved_token", key='temp1')
-    if st.session_state.temp1 is not None:
-        if "storage" in st.session_state.temp1:
-            if st.session_state.temp1['storage'] is not None:
-                saved_token = st.session_state.temp1['storage']['value']
-                if is_authenticate(saved_token):
-                    st.session_state["token"] = saved_token
-                else:
-                    local_storage.deleteItem("saved_token")
+    local_saved_token = local_storage.getItem("saved_token")
+    if local_saved_token is not None:
+        if is_authenticate(local_saved_token):
+            st.session_state["token"] = local_saved_token
+        else:
+            local_storage.deleteItem("saved_token")
 
 def login():
     """start login process of a user"""
