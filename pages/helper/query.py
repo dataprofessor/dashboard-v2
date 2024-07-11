@@ -102,11 +102,13 @@ class Queries():
                         public.all_data
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
+                        INNER JOIN table_code ON public.all_data.table_id = table_code.id
                     where
                         public.all_data.row_title IN ('درآمدهای عملیاتی','سود(زیان) ناخالص','سود(زیان) خالص')
                         and stocks.name = '{self.name}'
                         and (public.report_list.\"letterCode\" = 'ن-۱۰')
                         and public.all_data.deleted = false
+                        and table_code.sheet_id = 1
         """
         if dollar:
             string = self._dollar_query(string)
@@ -122,11 +124,13 @@ class Queries():
                         public.all_data
                         INNER JOIN stocks ON public.all_data.stock_id = stocks.id
                         INNER JOIN report_list ON public.all_data.report_id = report_list.id
+                        INNER JOIN table_code ON public.all_data.table_id = table_code.id
                     where
                         public.all_data.row_title IN ('درآمدهای عملیاتی','سود(زیان) ناخالص','سود(زیان) خالص')
                         and stocks.name = '{self.name}'
                         and (public.report_list.\"letterCode\" = 'ن-۱۰')
                         and public.all_data.deleted = false
+                        and table_code.sheet_id = 1
         """
         if dollar:
             string = self._dollar_query(string)
@@ -165,8 +169,7 @@ class Queries():
                                 INNER JOIN report_list ON public.all_data.report_id = report_list.id
                             where
                                 stocks.\"stockType\" IN ('300','303','309')
-                                AND (
-                                    public.all_data.column_title IN 'مبلغ فروش (میلیون ریال)','درآمد شناسایی شده')
+                                AND public.all_data.column_title IN ('مبلغ فروش (میلیون ریال)','درآمد شناسایی شده')
                                 and public.report_list.\"letterCode\" IN ( 'ن-۳۰', 'ن-۳۱')
                                 and public.all_data.deleted = false
                             group by
@@ -210,7 +213,8 @@ class Queries():
                                 WHEN rnk in (4, 5, 6) THEN sum_value
                             END
                             ),0)
-                        ) AS result3
+                        ) AS result3,
+                        max(end_to_period) as end_to_period
                         from
                         ranked_dates
                         group by

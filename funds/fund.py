@@ -10,6 +10,7 @@ class Fund():
         self.name = name
         self.fund_address = fund_address
         self.code = code
+        self.history = None
         self.update_fund_data()
         self.update_closing_price()
         self.metric = metrics
@@ -38,9 +39,18 @@ class Fund():
         response = requests.get(self.fund_address+"/Chart/TotalNAV?type=getnavtotal", timeout=60)
         json_object = json.loads(response.text)
         self.performance = []
-        self.performance.append((json_object[2]['List'][6]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
-        self.performance.append((json_object[2]['List'][22]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
-        self.performance.append((json_object[2]['List'][66]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+        if len(json_object[2]['List']) >= 7:
+            self.performance.append((json_object[2]['List'][6]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+        else:
+            self.performance.append(0)
+        if len(json_object[2]['List']) >= 23:
+            self.performance.append((json_object[2]['List'][22]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+        else:
+            self.performance.append(0)
+        if len(json_object[2]['List']) >= 67:
+            self.performance.append((json_object[2]['List'][66]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+        else:
+            self.performance.append(0)
     def update_closing_price(self):
 
         url = "https://cdn.tsetmc.com/api/ClosingPrice/GetClosingPriceInfo/{}".format(self.code)
