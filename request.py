@@ -29,9 +29,13 @@ def vasahm_query(query_string):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
     }
-    x = requests.post(url, json = myobj, headers=headers, timeout=60)
+    try:
+        x = requests.post(url, json = myobj, headers=headers, timeout=60)
+    except requests.ReadTimeout:
+        return [True, "TimeOut Error"]
+
     if x.status_code != 200:
-        return_value = [False, False]
+        return_value = [True, False]
     else:
         x=x.json()
         if x["hasError"]:

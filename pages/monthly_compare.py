@@ -3,11 +3,12 @@
 import streamlit as st
 import pandas as pd
 
+from pages.helper.query import Queries
+
 from login import check_local_token, login
 from request import vasahm_query
 from slider import create_range_slider
 from menu import add_menu
-
 
 
 st.set_page_config(layout='wide',
@@ -26,81 +27,8 @@ check_local_token()
 if "token" not in st.session_state:
     login()
 else:
-
-    QUERY_STRING = """WITH
-  ranked_dates AS (
-    SELECT
-      stocks.name,
-      \"endToPeriod\",
-      SUM(value) as sum_value,
-      ROW_NUMBER() OVER (
-        PARTITION BY
-          stocks.name
-        ORDER BY
-          \"endToPeriod\" DESC
-      ) AS rnk
-    FROM
-      \"MonthlyData\"
-      join stocks on \"MonthlyData\".stock_id = stocks.id
-    where
-      (
-        stocks.\"stockType\" = '300'
-        OR stocks.\"stockType\" = '303'
-        OR stocks.\"stockType\" = '309'
-      )
-      AND (
-        \"MonthlyData\".\"columnTitle\" = 'مبلغ فروش (میلیون ریال)'
-        OR \"MonthlyData\".\"columnTitle\" = 'درآمد شناسایی شده'
-      )
-    group by
-      stocks.name,
-      \"MonthlyData\".\"endToPeriod\"
-  )
-select
-  name,
-  (
-    MAX(
-      CASE
-        WHEN rnk = 1 THEN sum_value
-        ELSE 0
-      END
-    ) / NULLIF(MAX(
-      CASE
-        WHEN rnk = 2 THEN sum_value
-      END
-    ),0)
-  ) AS result,
-  (
-    SUM(
-      CASE
-        WHEN rnk IN (1, 2) THEN sum_value
-        ELSE 0
-      END
-    ) / NULLIF(SUM(
-      CASE
-        WHEN rnk in (3, 4) THEN sum_value
-      END
-    ),0)
-  ) AS result2,
-  (
-    SUM(
-      CASE
-        WHEN rnk IN (1, 2, 3) THEN sum_value
-        ELSE 0
-      END
-    ) / NULLIF(SUM(
-      CASE
-        WHEN rnk in (4, 5, 6) THEN sum_value
-      END
-    ),0)
-  ) AS result3
-from
-  ranked_dates
-group by
-  name"""
-    print("get table")
-    has_error, data = vasahm_query(QUERY_STRING)
-    print("back table")
+    queries = Queries()
+    has_error, data = vasahm_query(queries.QUERY_MONTHLY_COMPARE)
     if has_error:
         st.error(data, icon="🚨")
     else:

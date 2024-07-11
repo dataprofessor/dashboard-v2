@@ -25,7 +25,12 @@ if "ver" in st.session_state:
 FILE_PATH = "./funds/fund_data.csv"
 df = pd.read_csv(FILE_PATH, header=0)
 metrics = Metrics()
-funds = [ Fund(row["name"], row["url"], row["code"], metrics) for index, row  in df.iterrows()]
+funds = []
+for index, row  in df.iterrows():
+    try:
+        funds.append(Fund(row["name"], row["url"], row["code"], metrics))
+    except:
+        pass
 
 funds_df = pd.DataFrame([vars(obj) for obj in funds])
 # funds_df["name"] = funds_df["name"].apply(lambda x: correctPersianText(x))
