@@ -143,7 +143,7 @@ class Queries():
         )
         select
             row_title,
-            value::float / dollar.rate * 1000000 As dollar_value,
+            value::float / dollar.close * 1000000 As dollar_value,
             end_to_period
         from
             ranked_dates
