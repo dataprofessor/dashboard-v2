@@ -147,7 +147,7 @@ class Queries():
             end_to_period
         from
             ranked_dates
-            INNER JOIN dollar ON ranked_dates.\"endToPeriod\"::varchar = dollar.\"Jalali\"
+            INNER JOIN dollar ON ranked_dates.end_to_period::varchar = dollar.\"Jalali\"
         """
         return query_string
 
