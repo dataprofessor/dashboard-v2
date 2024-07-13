@@ -11,10 +11,16 @@
 /* Card */
 /* Adapted from https://startbootstrap.com/theme/sb-admin-2 */
 
-@import url('https://cdn.jsdelivr.net/npm/fontsource-vazir-matin@2.0.0-alpha.8');
-
+@font-face {
+  font-family: iransans;
+  src: url("static/media/IRANSansWeb.ttf") format("truetype");
+}
+* {
+  font-family: 'iransans' !important;
+  direction: rtl;
+}
 html, body, [class*="css"] {
-    font-family: 'Vazir Matn', sans-serif; 
+    /* font-family: 'iransans', sans-serif;  */
     font-size: 18px;
     font-weight: 500;
     color: #091747;
@@ -67,7 +73,8 @@ div.vg-tooltip-element {
   src: url("static/media/IRANSansWeb.ttf") format("truetype");
 }
 
-.e1nzilvr1 {
+
+/* .e1nzilvr1 {
   
   font-family: iransans !important;
   direction: rtl;
@@ -91,4 +98,4 @@ div.vg-tooltip-element {
 
 .e1y5xkzn3 {
   direction: rtl;
-}
+} */
