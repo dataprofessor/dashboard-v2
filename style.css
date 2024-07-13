@@ -17,7 +17,7 @@
 }
 * {
   font-family: 'iransans' !important;
-  direction: rtl;
+  /* direction: rtl; */
 }
 html, body, [class*="css"] {
     /* font-family: 'iransans', sans-serif;  */
@@ -74,28 +74,28 @@ div.vg-tooltip-element {
 }
 
 
-/* .e1nzilvr1 {
+.e1nzilvr1 {
   
-  font-family: iransans !important;
+  /* font-family: iransans !important; */
   direction: rtl;
 }
 
 .stMultiSelect {
-  font-family: iransans !important;
+  /* font-family: iransans !important; */
   direction: rtl;
 }
 
 
 .e1nzilvr5 {
-  font-family: iransans !important;
+  /* font-family: iransans !important; */
   direction: rtl;
 }
 
 [data-testid="stVirtualDropdown"] div{
-  font-family: iransans !important;
+  /* font-family: iransans !important; */
   direction: rtl;
 }
 
 .e1y5xkzn3 {
   direction: rtl;
-} */
+}
