@@ -38,19 +38,19 @@ class Fund():
         
         response = requests.get(self.fund_address+"/Chart/TotalNAV?type=getnavtotal", timeout=60)
         json_object = json.loads(response.text)
-        self.performance = []
+        self.performance = {}
         if len(json_object[2]['List']) >= 7:
-            self.performance.append((json_object[2]['List'][6]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+            self.performance["هفتگی"]=(json_object[2]['List'][6]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"]
         else:
-            self.performance.append(0)
+            self.performance["هفتگی"]=0
         if len(json_object[2]['List']) >= 23:
-            self.performance.append((json_object[2]['List'][22]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+            self.performance["ماهانه"]=(json_object[2]['List'][22]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"]
         else:
-            self.performance.append(0)
+           self.performance["ماهانه"]=0
         if len(json_object[2]['List']) >= 67:
-            self.performance.append((json_object[2]['List'][66]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"])
+            self.performance["فصلی"]=(json_object[2]['List'][66]["y"]-json_object[2]['List'][0]["y"])/json_object[2]['List'][0]["y"]
         else:
-            self.performance.append(0)
+            self.performance["فصلی"]=0
     def update_closing_price(self):
 
         url = "https://cdn.tsetmc.com/api/ClosingPrice/GetClosingPriceInfo/{}".format(self.code)
