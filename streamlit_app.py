@@ -1,63 +1,45 @@
 import streamlit as st
 import pandas as pd
-import plost
+import numpy as np
 
-st.set_page_config(layout='wide', initial_sidebar_state='expanded')
+# Create some example data
+data = pd.DataFrame({
+    'x': np.random.randn(100),
+    'y': np.random.randn(100)
+})
 
-with open('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    
-st.sidebar.header('Dashboard `version 2`')
+# Sidebar
+st.sidebar.title('Dashboard Options')
+option = st.sidebar.selectbox(
+    'Which plot would you like to see?',
+    ('Scatter Plot', 'Histogram')
+)
 
-st.sidebar.subheader('Heat map parameter')
-time_hist_color = st.sidebar.selectbox('Color by', ('temp_min', 'temp_max')) 
+# Main area
+st.title('Simple Dashboard')
 
-st.sidebar.subheader('Donut chart parameter')
-donut_theta = st.sidebar.selectbox('Select data', ('q2', 'q3'))
+if option == 'Scatter Plot':
+    st.subheader('Scatter Plot')
+    st.write(data)
 
-st.sidebar.subheader('Line chart parameters')
-plot_data = st.sidebar.multiselect('Select data', ['temp_min', 'temp_max'], ['temp_min', 'temp_max'])
-plot_height = st.sidebar.slider('Specify plot height', 200, 500, 250)
+    # Plot scatter plot
+    st.write("### Scatter Plot")
+    st.write("This is a scatter plot of random data")
+    st.write(data)
 
-st.sidebar.markdown('''
----
-Created with ❤️ by [Data Professor](https://youtube.com/dataprofessor/).
-''')
+    st.write("### Scatter Plot")
+    st.write("This is a scatter plot of random data")
+    st.write(data)
 
+elif option == 'Histogram':
+    st.subheader('Histogram')
+    st.write(data)
 
-# Row A
-st.markdown('### Metrics')
-col1, col2, col3 = st.columns(3)
-col1.metric("Temperature", "70 °F", "1.2 °F")
-col2.metric("Wind", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
+    # Plot histogram
+    st.write("### Histogram")
+    st.write("This is a histogram of random data")
+    st.hist(data['x'], bins=20)
 
-# Row B
-seattle_weather = pd.read_csv('https://raw.githubusercontent.com/tvst/plost/master/data/seattle-weather.csv', parse_dates=['date'])
-stocks = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/stocks_toy.csv')
-
-c1, c2 = st.columns((7,3))
-with c1:
-    st.markdown('### Heatmap')
-    plost.time_hist(
-    data=seattle_weather,
-    date='date',
-    x_unit='week',
-    y_unit='day',
-    color=time_hist_color,
-    aggregate='median',
-    legend=None,
-    height=345,
-    use_container_width=True)
-with c2:
-    st.markdown('### Donut chart')
-    plost.donut_chart(
-        data=stocks,
-        theta=donut_theta,
-        color='company',
-        legend='bottom', 
-        use_container_width=True)
-
-# Row C
-st.markdown('### Line chart')
-st.line_chart(seattle_weather, x = 'date', y = plot_data, height = plot_height)
+    st.write("### Histogram")
+    st.write("This is a histogram of random data")
+    st.hist(data['y'], bins=20)
