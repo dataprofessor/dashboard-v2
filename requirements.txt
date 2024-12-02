@@ -1,4 +1,5 @@
 streamlit==1.14.0
 pandas==1.5.1
 plost==0.2.5
+altair==4.2.0
 numpy==1.23.4
